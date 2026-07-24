@@ -63,7 +63,7 @@ Loubrain installs into your Claude Code config directory (`~/.claude`).
 ### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/<your-username>/loubrain.git
+git clone https://github.com/Raizmm/loubrain.git
 cd loubrain
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
@@ -71,7 +71,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/<your-username>/loubrain.git
+git clone https://github.com/Raizmm/loubrain.git
 cd loubrain
 bash install.sh
 ```
