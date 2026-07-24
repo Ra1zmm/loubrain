@@ -110,6 +110,23 @@ If you prefer not to run the script:
 2. Copy `hooks/loubrain-nudge.ps1` → `~/.claude/loubrain-hooks/loubrain-nudge.ps1`
 3. Add the block from [docs/how-it-works.md#config](docs/how-it-works.md#config) to `~/.claude/CLAUDE.md` and `~/.claude/settings.json`.
 
+## Publishing your own copy
+
+The repo is ready to push as-is (branch `main`). With the [GitHub CLI](https://cli.github.com/), one command creates the remote and pushes:
+
+```bash
+gh repo create Raizmm/loubrain --public --source . --remote origin --push
+```
+
+No `gh`? Create an empty `loubrain` repo at [github.com/new](https://github.com/new), then:
+
+```bash
+git remote add origin https://github.com/Raizmm/loubrain.git
+git push -u origin main
+```
+
+The `validate` workflow runs automatically on the first push.
+
 ## Contributing
 
 Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
