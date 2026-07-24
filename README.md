@@ -63,7 +63,7 @@ Loubrain installs into your Claude Code config directory (`~/.claude`).
 ### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/Raizmm/loubrain.git
+git clone https://github.com/Ra1zmm/loubrain.git
 cd loubrain
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
@@ -71,7 +71,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/Raizmm/loubrain.git
+git clone https://github.com/Ra1zmm/loubrain.git
 cd loubrain
 bash install.sh
 ```
@@ -115,13 +115,13 @@ If you prefer not to run the script:
 The repo is ready to push as-is (branch `main`). With the [GitHub CLI](https://cli.github.com/), one command creates the remote and pushes:
 
 ```bash
-gh repo create Raizmm/loubrain --public --source . --remote origin --push
+gh repo create Ra1zmm/loubrain --public --source . --remote origin --push
 ```
 
 No `gh`? Create an empty `loubrain` repo at [github.com/new](https://github.com/new), then:
 
 ```bash
-git remote add origin https://github.com/Raizmm/loubrain.git
+git remote add origin https://github.com/Ra1zmm/loubrain.git
 git push -u origin main
 ```
 
