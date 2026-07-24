@@ -1,0 +1,33 @@
+{
+  "skill_name": "loubrain",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "build me a simple todo app with react, i want to track my daily tasks and mark them done",
+      "expected_output": "Kickoff brief first (goal statement, skill roster table electing installed skills per capability, gaps section), then minimal React todo skeleton",
+      "files": [],
+      "assertions": [
+        "Brief states the project goal in 1-2 sentences before any code is written",
+        "Brief contains a roster table mapping capabilities to elected skills",
+        "Every elected skill in the roster actually exists in the installed skill library",
+        "Election evidence present: at least one capability shows competing candidates compared or scored",
+        "Gaps section present (a list or explicit 'none')",
+        "Project code files created only after the kickoff brief"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "create a landing page for my small coffee shop, something modern that shows the menu and location",
+      "expected_output": "Kickoff brief first (goal, roster, gaps), then minimal landing page skeleton",
+      "files": [],
+      "assertions": [
+        "Brief states the project goal in 1-2 sentences before any code is written",
+        "Brief contains a roster table mapping capabilities to elected skills",
+        "Every elected skill in the roster actually exists in the installed skill library",
+        "Election evidence present: at least one capability shows competing candidates compared or scored",
+        "Gaps section present (a list or explicit 'none')",
+        "Project code files created only after the kickoff brief"
+      ]
+    }
+  ]
+}

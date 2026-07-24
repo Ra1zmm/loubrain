@@ -1,0 +1,15 @@
+# Loubrain test/eval scratch output
+project-kickoff-workspace/
+*-workspace/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log

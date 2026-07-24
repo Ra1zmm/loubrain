@@ -1,0 +1,37 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SKILL.md has name + description frontmatter
+        run: |
+          f=skills/loubrain/SKILL.md
+          test -f "$f"
+          grep -qE '^name:[[:space:]]*loubrain[[:space:]]*$' "$f"
+          grep -qE '^description:[[:space:]]*\S' "$f"
+
+      - name: evals.json is valid JSON
+        run: python3 -c "import json; json.load(open('skills/loubrain/evals/evals.json'))"
+
+      - name: hook script is ASCII-only
+        run: |
+          if LC_ALL=C grep -nP '[^\x00-\x7F]' hooks/loubrain-nudge.ps1; then
+            echo "::error file=hooks/loubrain-nudge.ps1::non-ASCII byte found (PowerShell 5.1 will mangle it)"
+            exit 1
+          fi
+
+      - name: hook fires on a build prompt, stays silent otherwise
+        shell: pwsh
+        run: |
+          $fire = '{"prompt":"build me a react dashboard"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
+          if (-not $fire) { throw "expected the hook to emit JSON on a build prompt" }
+          $silent = '{"prompt":"what does this stack trace mean"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
+          if ($silent) { throw "expected no output on a non-build prompt, got: $silent" }
+          Write-Host "hook behaves correctly"
