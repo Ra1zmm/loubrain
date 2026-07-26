@@ -4,6 +4,18 @@ All notable changes to Loubrain are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is
 [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `docs/PROTOCOL.md` — tool-agnostic canonical description of the five-phase
+  process, source of truth for all assistant adapters.
+- `AGENTS.md` — adapter for Codex CLI and other `AGENTS.md`-convention tools.
+- `GEMINI.md` — adapter for Gemini CLI.
+- `.cursor/rules/loubrain.mdc` — adapter for Cursor.
+- CI checks that the adapters exist and stay free of Claude-Code-specific
+  tool names.
+- README "Compatibility" section and per-tool install instructions.
+
 ## [0.1.0] - 2026-07-24
 
 ### Added

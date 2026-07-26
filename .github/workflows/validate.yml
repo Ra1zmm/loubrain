@@ -35,3 +35,21 @@ jobs:
           $silent = '{"prompt":"what does this stack trace mean"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
           if ($silent) { throw "expected no output on a non-build prompt, got: $silent" }
           Write-Host "hook behaves correctly"
+
+      - name: cross-tool adapters exist and stay Claude-tool-agnostic
+        run: |
+          for f in AGENTS.md GEMINI.md .cursor/rules/loubrain.mdc docs/PROTOCOL.md; do
+            test -f "$f" || { echo "::error::missing adapter file $f"; exit 1; }
+          done
+          # Adapters must not reference Claude Code's own tool names -- they
+          # should stay written for a generic assistant, unlike SKILL.md.
+          if grep -lE '\b(AskUserQuestion|ToolSearch)\b' AGENTS.md GEMINI.md .cursor/rules/loubrain.mdc; then
+            echo "::error::a cross-tool adapter references a Claude-Code-specific tool name"
+            exit 1
+          fi
+
+      - name: Cursor rule has valid frontmatter
+        run: |
+          f=.cursor/rules/loubrain.mdc
+          head -1 "$f" | grep -qx -- '---'
+          grep -qE '^description:[[:space:]]*\S' "$f"

@@ -1,0 +1,41 @@
+---
+description: Loubrain - run first on any request to build, create, or scaffold a project, app, tool, or feature
+alwaysApply: true
+---
+
+# Loubrain
+
+Before writing any code or creating any file in response to a request to build, create, start, make, scaffold, or set up a project, app, website, tool, script, bot, feature, or MVP, run the process below. Skip it only for a trivial one-file edit to existing code that isn't really a new project.
+
+Full rationale in `docs/PROTOCOL.md` in this repo - this rule adapts that same protocol for Cursor.
+
+## 1. Pin the goal
+
+Restate the deliverable in 1-2 sentences and name the real end goal - what the user will *do* with the result. Ask as many focused questions as it takes to resolve anything that would change the build (audience, platform, scale, stack, must-haves, delivery constraints) - every question must move the goal forward, never filler. Offer a recommended default with each question when you can. State anything safely inferable as a one-line assumption instead of asking.
+
+## 2. Elect the best tool per capability
+
+List the capabilities the project needs. For each, find candidate rules/tools/MCP servers using the cheapest source first - never a brute-force scan of everything configured.
+
+- 0 candidates -> gap, note for step 4.
+- 1 candidate -> use it directly, no comparison needed.
+- 2+ genuinely competing -> compare what each does, check external evidence (web search) on which approach is better regarded for this kind of project, and score on goal-fit, specificity to this stack, coverage, and the evidence. Pick one winner per capability, never two.
+
+## 3. Show the plan and wait
+
+```
+Goal: <1-2 sentences>
+Plan:
+  <capability> -> <chosen tool>  (<why, one line>)
+Gaps: <list or "none">
+```
+
+Only name tools that actually exist. Wait for the user's go-ahead before building.
+
+## 4. Suggest what's missing
+
+For any gap, research the best real option and suggest it with a one-line reason and where to get it. Never install without explicit approval.
+
+## 5. Build
+
+Only after approval, only with the tools from the approved plan. If one proves a bad fit mid-build, say so and name the replacement.
