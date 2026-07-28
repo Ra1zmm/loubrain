@@ -5,17 +5,28 @@
 # ASCII-only on purpose (Windows PowerShell 5.1 mangles non-ASCII in .ps1).
 
 $ErrorActionPreference = 'Stop'
-$repo   = Split-Path -Parent $MyInvocation.MyCommand.Path
-$claude = Join-Path $HOME '.claude'
-$stamp  = Get-Date -Format 'yyyyMMdd-HHmmss'
+$repo  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+
+# Claude Code reads its config from CLAUDE_CONFIG_DIR when that is set, and
+# only falls back to ~/.claude otherwise. Installing to the wrong one leaves a
+# stray directory that Claude never loads, so honor the env var first.
+if ($env:CLAUDE_CONFIG_DIR) { $claude = $env:CLAUDE_CONFIG_DIR }
+else                        { $claude = Join-Path $HOME '.claude' }
 
 function Say($m) { Write-Host "[loubrain] $m" }
+Say "Config directory: $claude"
 
 # --- 1. Copy skill + hook -------------------------------------------------
 New-Item -ItemType Directory -Force -Path (Join-Path $claude 'skills') | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $claude 'loubrain-hooks') | Out-Null
 
-Copy-Item -Recurse -Force (Join-Path $repo 'skills\loubrain') (Join-Path $claude 'skills\loubrain')
+# Remove any previous copy first: Copy-Item -Recurse into an existing directory
+# nests a duplicate inside it, and a stale file from an older version would
+# otherwise survive the upgrade.
+$skillDest = Join-Path $claude 'skills\loubrain'
+if (Test-Path $skillDest) { Remove-Item -Recurse -Force $skillDest }
+Copy-Item -Recurse -Force (Join-Path $repo 'skills\loubrain') $skillDest
 Copy-Item -Force (Join-Path $repo 'hooks\loubrain-nudge.ps1') (Join-Path $claude 'loubrain-hooks\loubrain-nudge.ps1')
 Say 'Copied skill -> ~/.claude/skills/loubrain'
 Say 'Copied hook  -> ~/.claude/loubrain-hooks/loubrain-nudge.ps1'

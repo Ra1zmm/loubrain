@@ -6,12 +6,20 @@
 set -euo pipefail
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-claude="$HOME/.claude"
+# Claude Code reads its config from CLAUDE_CONFIG_DIR when that is set, and only
+# falls back to ~/.claude otherwise. Installing to the wrong one leaves a stray
+# directory that Claude never loads, so honor the env var first.
+claude="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 stamp="$(date +%Y%m%d-%H%M%S)"
 say() { printf '[loubrain] %s\n' "$1"; }
+say "Config directory: $claude"
 
 # --- 1. Copy skill + hook -------------------------------------------------
 mkdir -p "$claude/skills" "$claude/loubrain-hooks"
+# Remove any previous copy first: `cp -R src/dir dest/dir` nests a duplicate
+# inside dest/dir when it already exists, and a stale file from an older
+# version would otherwise survive the upgrade.
+rm -rf "$claude/skills/loubrain"
 cp -R "$repo/skills/loubrain" "$claude/skills/loubrain"
 cp "$repo/hooks/loubrain-nudge.ps1" "$claude/loubrain-hooks/loubrain-nudge.ps1"
 say "Copied skill -> ~/.claude/skills/loubrain"

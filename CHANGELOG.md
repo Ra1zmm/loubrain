@@ -6,6 +6,16 @@ All notable changes to Loubrain are documented here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- Installers now honor `CLAUDE_CONFIG_DIR` instead of assuming `~/.claude`.
+  Previously, users with a relocated Claude config got a stray directory in
+  their home folder that Claude Code never loads, so Loubrain appeared to
+  install successfully while doing nothing.
+- Installers no longer nest a duplicate `skills/loubrain/loubrain/` on
+  re-run (`cp -R` / `Copy-Item -Recurse` copy *into* an existing target).
+  The previous copy is now removed first, which also clears stale files
+  left over from an older version.
+
 ### Added
 - `docs/PROTOCOL.md` — tool-agnostic canonical description of the five-phase
   process, source of truth for all assistant adapters.
