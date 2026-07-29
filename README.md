@@ -4,7 +4,7 @@
 
 **The skill that thinks before it builds.**
 
-Loubrain runs *first* on every "build me a…" request. It pins down what you actually want, elects the best tool **and** agent your library has for each job, flags what's missing, and only starts building once you approve the plan. Full-featured on [Claude Code](https://claude.com/claude-code); portable adapters ship for Codex CLI, Gemini CLI, and Cursor.
+Loubrain runs *first* on every build **or** big-change request — new projects, refactors, rewrites, migrations, redesigns. It pins down what you actually want, elects the best tool **and** agent your library has for each job, flags what's missing, and only starts once you approve the plan. No keyword needed: it fires on intent. Full-featured on [Claude Code](https://claude.com/claude-code); portable adapters ship for Codex CLI, Gemini CLI, and Cursor.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-6E56CF.svg)](https://claude.com/claude-code)
@@ -25,15 +25,29 @@ Loubrain is that step. It's the brain that runs before the hands.
 ## What it does
 
 ```
-You: "build me a landing page for my coffee shop"
+You: "refactor this codebase to use server components"
 
 Loubrain:
   1. Pins the goal      → asks focused questions (each with a recommended default)
   2. Elects the toolset → best skill + agent per capability, from YOUR library
   3. Shows the roster   → a table of exactly what it will use, and why
   4. Flags gaps         → suggests skills worth installing, with sources
-  5. Waits for go       → builds only after your green light
+  5. Waits for go       → works only after your green light
 ```
+
+## When it fires
+
+On **intent alone** — you never type `/loubrain` or any keyword:
+
+| Fires | Stays out of the way |
+|---|---|
+| build / create / scaffold a project, app, site, tool, bot | fix this typo |
+| improve / refactor / rewrite / redesign / restructure | rename this variable |
+| migrate / port / modernize / upgrade | change one config value |
+| add a feature, subsystem, or module | answer a question about the code |
+| anything framed as major, large, or from scratch | |
+
+The rule of thumb it follows: when a change is somewhere between trivial and substantial, run — a short brief costs far less than doing a big change with the wrong tools.
 
 ## Features
 
@@ -43,7 +57,8 @@ Loubrain:
 - **💸 Cost-aware.** The election (the expensive, research-heavy part) runs on Sonnet, not the main model, and only fires when a capability genuinely has 2+ rivals. Single-option jobs skip it entirely.
 - **🔌 Gap suggestions.** Missing a capability? Loubrain researches the best installable skill/plugin and suggests it — with a source — before you build. Never installs without your OK.
 - **✋ Green-light gate.** Shows the full roster and stops. You approve, swap, or drop picks before anything is built.
-- **⚡ Always first.** A global `CLAUDE.md` rule plus a `UserPromptSubmit` hook make it the mandatory first step on any build request — even when you never say its name.
+- **⚡ Always first, no keyword.** A global `CLAUDE.md` rule plus a `UserPromptSubmit` hook make it the mandatory first step on any build *or* change request. It fires on intent — you never name it, and waiting to be asked counts as a failure to run.
+- **🔗 Hands-free handoff.** Once you approve the roster, the assistant invokes each elected skill itself. No `/skill-name` to type, no second round of "should I use X now?" — the approved roster is the authorization.
 
 ## How it works
 
@@ -55,7 +70,7 @@ Loubrain runs in five phases. Full detail in [docs/how-it-works.md](docs/how-it-
 | **2. Election** | Find candidate skills + agents per capability; when 2+ compete, a web-researched Sonnet election picks the winner | Sonnet subagent |
 | **3. Roster** | Show the capability → skill → agent table with reasons, then wait for approval | main |
 | **4. Gaps** | Research + suggest installable skills for any capability with no candidate | main |
-| **5. Build** | After green light, build using each capability's elected skill + agent | main |
+| **5. Build** | After green light, invoke each elected skill + agent directly — no keyword from you | main |
 
 ## Compatibility
 
@@ -110,13 +125,15 @@ Check your tool's docs for where it expects the file (project root vs. a global 
 
 ## Usage
 
-Just ask Claude to build something:
+There's nothing to invoke. Just ask for the work:
 
 ```
 build me a react dashboard for my sales data
+refactor this codebase to use server components
+migrate the database from mongo to postgres
 ```
 
-Loubrain takes over: asks what it needs, shows you the roster, and waits for your go. To invoke it explicitly, type `/loubrain`.
+Loubrain takes over on its own: asks what it needs, shows you the roster, waits for your go, then runs the elected skills itself. `/loubrain` still works if you want to force it on something it judged trivial.
 
 ## Repository structure
 

@@ -27,14 +27,53 @@ jobs:
             exit 1
           fi
 
-      - name: hook fires on a build prompt, stays silent otherwise
+      - name: hook fires on build and change work, stays silent on trivial edits
         shell: pwsh
         run: |
-          $fire = '{"prompt":"build me a react dashboard"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
-          if (-not $fire) { throw "expected the hook to emit JSON on a build prompt" }
-          $silent = '{"prompt":"what does this stack trace mean"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
-          if ($silent) { throw "expected no output on a non-build prompt, got: $silent" }
-          Write-Host "hook behaves correctly"
+          # Loubrain triggers on intent alone, covering new projects AND changes
+          # to existing ones. Trivial contained edits must stay silent.
+          $shouldFire = @(
+            'build me a react dashboard',
+            'create a landing page for my coffee shop',
+            'improve the project',
+            'refactor this codebase to use hooks',
+            'lets rewrite the backend in go',
+            'migrate the database to postgres',
+            'add a feature for exporting to csv',
+            'restructure the repo into a monorepo',
+            'rewrite it from scratch',
+            'this needs a major refactor'
+          )
+          $shouldStaySilent = @(
+            'what does this stack trace mean',
+            'fix the typo in the readme',
+            'rename the variable foo to bar',
+            'add a comment above this function',
+            'create a column in this spreadsheet showing profit margin',
+            'explain how promises work'
+          )
+          $failed = 0
+          foreach ($p in $shouldFire) {
+            $out = (@{prompt=$p} | ConvertTo-Json -Compress) | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
+            if (-not $out) { Write-Host "::error::expected FIRE but got silence: $p"; $failed++ }
+          }
+          foreach ($p in $shouldStaySilent) {
+            $out = (@{prompt=$p} | ConvertTo-Json -Compress) | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
+            if ($out) { Write-Host "::error::expected SILENCE but hook fired: $p"; $failed++ }
+          }
+          if ($failed) { throw "$failed trigger case(s) failed" }
+          Write-Host "trigger accuracy: $($shouldFire.Count + $shouldStaySilent.Count)/$($shouldFire.Count + $shouldStaySilent.Count)"
+
+      - name: hook survives malformed input without crashing
+        shell: pwsh
+        run: |
+          # The hook runs on every prompt, so a crash here would break the whole
+          # session. It must always exit 0, whatever it is handed.
+          foreach ($raw in @('', 'not json', '{}', '{"prompt":null}', '{"prompt":""}', '{"prompt":"build an app')) {
+            $raw | pwsh -NoProfile -File hooks/loubrain-nudge.ps1 > $null 2>&1
+            if ($LASTEXITCODE -ne 0) { throw "hook exited $LASTEXITCODE on input: $raw" }
+          }
+          Write-Host "hook exits 0 on all malformed inputs"
 
       - name: cross-tool adapters exist and stay Claude-tool-agnostic
         run: |

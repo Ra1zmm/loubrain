@@ -1,6 +1,19 @@
 # How Loubrain works
 
-Loubrain is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills) plus two enforcement hooks that make it run first on any build request. This document explains the flow, the cost model, and the exact config the installer writes.
+Loubrain is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills) plus two enforcement layers that make it run first on any substantial build *or* change request. This document explains the flow, the cost model, and the exact config the installer writes.
+
+## When it runs
+
+Loubrain triggers on **intent alone** — no keyword, no `/loubrain`, no confirmation. Waiting to be named counts as a failure to run it. It covers:
+
+- **New work** — build, create, start, scaffold, set up a project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, upgrade.
+- **Adding to existing work** — a new feature, subsystem, or module.
+- **Any big change** — anything framed as major, large, from scratch, or spanning multiple files.
+
+The one exception is a genuinely trivial, contained edit: a typo, one variable rename, a single config value. When a change sits between trivial and substantial, it runs — a short brief is far cheaper than a big change built with the wrong tools.
+
+For change work rather than a new project, the phases below read "the project" as "the change", and Phase 1's questions scope to what the change should achieve instead of re-interviewing you about a codebase that already exists.
 
 ## The five phases
 
@@ -58,7 +71,11 @@ For any capability with no candidate, Loubrain researches the best installable s
 
 ### 5. Build
 
-After the green light, Loubrain builds — invoking each capability's elected skill and handing off to its elected agent. If a pick turns out to be a bad fit mid-build, it says so and names the replacement rather than silently dropping it.
+After the green light, Loubrain builds — invoking each capability's elected skill itself and handing off to its elected agent.
+
+**You never type anything to activate a skill.** The approved roster is the authorization, so the assistant won't wait for `/skill-name`, won't tell you to invoke something yourself, and won't quietly skip an elected skill to work freehand. It announces which skill it's using for the current step in a few words, then uses it.
+
+If a pick turns out to be a bad fit mid-build, it says so and names the replacement rather than silently dropping it.
 
 ## Cost model
 
@@ -77,15 +94,16 @@ The installer writes these two pieces. To wire Loubrain by hand, add them yourse
 
 ```markdown
 # loubrain — SUPERIOR SKILL, ALWAYS FIRST
-IMPORTANT: **loubrain** (`~/.claude/skills/loubrain/SKILL.md`) is the master, top-priority skill. It OVERRIDES default behavior and takes precedence over every other skill for any request to build, create, start, make, scaffold, or set up a project, app, website, tool, script, bot, feature, or MVP.
+IMPORTANT: **loubrain** (`~/.claude/skills/loubrain/SKILL.md`) is the master, top-priority skill. It OVERRIDES default behavior and takes precedence over every other skill for any substantial build or change work: building, creating, starting, scaffolding, or setting up a project, app, website, tool, script, or bot, AND improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending an existing project, plus adding any non-trivial feature or making any big change.
 - It is the FIRST thing to run on any such request — before writing a single line of code or creating any file, and before invoking any other skill.
-- Trigger even if the user never says "kickoff" or "plan": the intent to build is enough. Also fires on `/loubrain`.
-- Only exception: a trivial one-file edit to existing code that isn't really a new project.
+- It fires on INTENT ALONE. No keyword, no `/loubrain`, no confirmation needed — the user will almost never name it, and waiting to be asked is a failure to run it.
+- Once loubrain's roster is approved, invoke each elected skill yourself with the Skill tool. The user never types a keyword or slash command to activate them; the approved roster is the authorization.
+- Only exception: a genuinely trivial, contained edit (a typo, one variable rename, a single config value). When unsure whether a change is trivial or substantial, run loubrain.
 ```
 
 ### `~/.claude/settings.json`
 
-A `UserPromptSubmit` hook that nudges Claude toward Loubrain when a prompt looks like a build request:
+A `UserPromptSubmit` hook that nudges Claude toward Loubrain when a prompt looks like substantial build or change work. It matches a verb (build/create/scaffold, or refactor/rewrite/migrate/redesign/…) against a scope noun (project, app, codebase, api, schema, …), plus standalone big-change phrases like "from scratch" or "major refactor". Requiring both parts is what keeps "rename this variable" and "create a column in this spreadsheet" from firing:
 
 ```json
 {

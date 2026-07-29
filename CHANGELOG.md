@@ -21,6 +21,13 @@ All notable changes to Loubrain are documented here. Format follows
   ("rename this variable", "fix the typo") still correctly stay silent.
 - Same changes carried into docs/PROTOCOL.md and all three cross-tool
   adapters so behavior is consistent across assistants.
+- README and docs/how-it-works.md rewritten to match: new "When it fires"
+  table (fires vs. stays out of the way), no-keyword usage section, updated
+  `CLAUDE.md` block, and a description of how the trigger hook matches.
+- Eval set extended from 2 to 5 cases, covering a refactor, a feature
+  addition, and a trivial rename that must *not* trigger a kickoff.
+- CI now checks 16 trigger cases (10 fire, 6 stay silent) instead of 2, and
+  asserts the hook exits 0 on malformed input.
 
 ### Fixed
 - Installers now honor `CLAUDE_CONFIG_DIR` instead of assuming `~/.claude`.

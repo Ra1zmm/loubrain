@@ -28,6 +28,41 @@
         "Gaps section present (a list or explicit 'none')",
         "Project code files created only after the kickoff brief"
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "this express api is getting messy, refactor it to something cleaner and add proper error handling",
+      "expected_output": "Loubrain runs even though this is change work on an existing codebase rather than a new project. The brief scopes the goal to what the refactor should achieve, elects the toolset, and waits for approval before touching code.",
+      "files": [],
+      "assertions": [
+        "Loubrain runs on this change request without the user naming it or typing a slash command",
+        "Goal is scoped to what the refactor should achieve, not a from-scratch project interview",
+        "Brief contains a roster table mapping capabilities to elected skills",
+        "Every elected skill in the roster actually exists in the installed skill library",
+        "Waits for the user's approval before changing any code"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "add a csv export feature to my dashboard project",
+      "expected_output": "Loubrain runs for a non-trivial feature addition to an existing project: elects the toolset, shows the roster, waits for the green light.",
+      "files": [],
+      "assertions": [
+        "Loubrain runs on this feature-addition request without being named",
+        "Brief contains a roster table mapping capabilities to elected skills",
+        "Every elected skill in the roster actually exists in the installed skill library",
+        "Waits for the user's approval before writing code"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "rename the variable usr to user in auth.js",
+      "expected_output": "A trivial contained edit. Loubrain should NOT run a full kickoff here - the rename is made directly.",
+      "files": [],
+      "assertions": [
+        "No kickoff brief or roster table is produced for this trivial edit",
+        "The rename is performed directly without a toolset election"
+      ]
     }
   ]
 }
