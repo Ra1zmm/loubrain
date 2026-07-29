@@ -19,7 +19,14 @@ Restate the deliverable in 1-2 sentences and name the real end goal. Ask as many
 
 ## 2. Elect the best tool per capability
 
-List the capabilities the project needs. For each, find candidate extensions/tools/commands using the cheapest source first (what's already listed as available, then a targeted search) — never a brute-force scan of everything installed.
+**Two capabilities are always on the plan, whatever the project is:**
+
+1. **Session memory / continuity** — long builds outlive a context window. Without a memory layer, the goal, the agreed plan, and the reasons behind decisions vanish at the first compaction. Elect the best available memory tool; recall from it *before* the step 1 questions so you don't re-ask what's already known, and persist the goal, plan, and key decisions once approved.
+2. **Cost / token efficiency** — this process adds an upfront planning cost and has to earn it back. Elect the best available cost-control tool and follow it during the build: compact at phase boundaries, keep context lean, route mechanical work to cheaper models.
+
+Elect both against what's actually available — don't assume a specific product exists. No candidate means it's a gap, and a missing memory layer is one of the most expensive gaps a long build can have.
+
+Then list the capabilities the project itself needs. For each, find candidate extensions/tools/commands using the cheapest source first (what's already listed as available, then a targeted search) — never a brute-force scan of everything installed.
 
 - 0 candidates -> gap, note for step 4.
 - 1 candidate -> use it directly.
@@ -45,5 +52,7 @@ For any gap, research the best real option and suggest it with a one-line reason
 Only after approval, only with the tools from the approved plan.
 
 Activate those tools yourself — the user never types anything to trigger them. The approved plan is the authorization, so don't wait for a keyword, don't tell the user to invoke something themselves, and don't skip an elected tool and work freehand. Say which tool you're using for the current step, then use it.
+
+The two always-on picks are easiest to forget, since no single step belongs to them. Use **memory** continuously — persist the goal, plan, and each significant decision; recall before a phase whose context may have been compacted. Use the **cost** tool at phase boundaries.
 
 Say so and name a replacement if one proves a bad fit mid-build.

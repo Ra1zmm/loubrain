@@ -63,6 +63,19 @@
         "No kickoff brief or roster table is produced for this trivial edit",
         "The rename is performed directly without a toolset election"
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "build a python cli that renames photo files based on their exif date",
+      "expected_output": "A normal kickoff, but specifically checking that the roster always carries the two non-negotiable capabilities: session memory and credit efficiency, elected from what is actually installed.",
+      "files": [],
+      "assertions": [
+        "Roster includes a session-memory capability with an elected skill that actually exists installed",
+        "Roster includes a credit/token-efficiency capability with an elected skill that actually exists installed",
+        "Both always-on rows appear even though the project itself never mentions memory or cost",
+        "If no candidate exists for either, it is listed as a gap with an install suggestion rather than silently dropped",
+        "Neither always-on pick is invented - both name real installed skills"
+      ]
     }
   ]
 }

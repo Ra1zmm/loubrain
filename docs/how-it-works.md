@@ -25,6 +25,21 @@ Each question ships with a **recommended default** as its first option, marked `
 
 ### 2. Election
 
+#### Two capabilities are always on the roster
+
+Whatever the project is, every roster includes these two. They aren't project-specific — they're what keeps a long build from degrading:
+
+| Always-on capability | Why | Typical candidates |
+|---|---|---|
+| **Session memory** | Long builds outlive a context window. Without it, the goal, the approved roster, and the reasoning behind decisions are lost at the first compaction, and the build drifts from the plan you approved. | `claude-mem` plugin skills, `graphify`, `knowledge-ops`, `continuous-learning-v2` |
+| **Credit efficiency** | Loubrain adds an upfront planning cost, so it has to earn that back across the build. | `context-budget`, `strategic-compact`, `token-budget-advisor`, `cost-aware-llm-pipeline` |
+
+Both are **elected from what you actually have installed** — nothing is hardcoded, so this works on any setup. If you have no candidate for one, it's a gap and Phase 4 suggests one; a missing memory layer is among the most expensive gaps a long build can have.
+
+Memory is used at both ends: Loubrain searches it *before* the Phase 1 questions (so it doesn't re-ask what a past session already established) and writes the goal, roster, and key decisions once the roster is approved.
+
+#### The project's own capabilities
+
 Loubrain finds candidate skills **and** agents for each capability the project needs (frontend, API, database, testing, deployment, docs, …).
 
 Finding candidates is cheap and done inline:
@@ -74,6 +89,8 @@ For any capability with no candidate, Loubrain researches the best installable s
 After the green light, Loubrain builds — invoking each capability's elected skill itself and handing off to its elected agent.
 
 **You never type anything to activate a skill.** The approved roster is the authorization, so the assistant won't wait for `/skill-name`, won't tell you to invoke something yourself, and won't quietly skip an elected skill to work freehand. It announces which skill it's using for the current step in a few words, then uses it.
+
+The two always-on picks are the easiest to forget, because no single step "belongs" to them. The **memory** skill runs continuously — persisting the goal, roster, and each significant decision as they happen, and recalling before a phase whose context may have been compacted away. The **credit** skill runs at phase boundaries — compact when a phase closes, carry only what the next phase needs, push mechanical work to cheaper models.
 
 If a pick turns out to be a bad fit mid-build, it says so and names the replacement rather than silently dropping it.
 

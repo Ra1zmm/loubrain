@@ -54,6 +54,7 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 - **🎯 Goal-first.** Extracts the real end goal — what you'll *do* with the result — before a line of code. Asks as many focused questions as it takes, each with a recommended default so you can just hit accept.
 - **🗳️ Skill elections.** When 4–5 skills compete for the same job, Loubrain spins up a **Claude Sonnet** subagent that reads each candidate, researches the approaches on the web + Reddit/dev blogs, and scores them on goal-match, specificity, coverage, and external verdict. One winner per capability.
 - **🤖 Agents too.** Reviewers, resolvers, and other subagents are elected the same way — not left to chance.
+- **🧠 Memory + cost always on.** Every roster includes two capabilities regardless of the project: a **session-memory** skill (`claude-mem` or equivalent) so the goal and plan survive compaction, and a **credit-efficiency** skill so a long build stays cheap. Both are elected from what you actually have — nothing is hardcoded.
 - **💸 Cost-aware.** The election (the expensive, research-heavy part) runs on Sonnet, not the main model, and only fires when a capability genuinely has 2+ rivals. Single-option jobs skip it entirely.
 - **🔌 Gap suggestions.** Missing a capability? Loubrain researches the best installable skill/plugin and suggests it — with a source — before you build. Never installs without your OK.
 - **✋ Green-light gate.** Shows the full roster and stops. You approve, swap, or drop picks before anything is built.

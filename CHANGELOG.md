@@ -6,6 +6,22 @@ All notable changes to Loubrain are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Two capabilities are now always on the roster**, regardless of the
+  project: a **session-memory** skill (the `claude-mem` plugin or equivalent)
+  so the goal, roster, and decisions survive a compaction, and a
+  **credit/token-efficiency** skill so a long build earns back Loubrain's
+  upfront planning cost. Both are elected from what is actually installed —
+  nothing is hardcoded, and a missing one becomes a gap with an install
+  suggestion rather than being silently skipped.
+- Phase 1 now searches the elected memory skill *before* asking questions, so
+  a past session's answers aren't re-requested.
+- Phase 5 spells out how the two always-on picks are used, since no single
+  build step "belongs" to them: memory persists decisions continuously, the
+  cost skill acts at phase boundaries.
+- Sixth eval covering the always-on pair, including that neither pick may be
+  invented and that a missing one is reported as a gap.
+
 ### Changed
 - Loubrain now triggers on **change work**, not just new projects: improving,
   refactoring, rewriting, redesigning, restructuring, migrating, modernizing,

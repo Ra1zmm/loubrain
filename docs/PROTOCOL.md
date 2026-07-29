@@ -49,6 +49,31 @@ instead of asked.
 
 ## Phase 2 — Find and elect the best tools for the job
 
+### Two capabilities are always on the plan
+
+Whatever the project is, every plan includes these two. They aren't
+project-specific — they're what keeps a long build from degrading, so they
+matter more than any single framework choice:
+
+1. **Session memory / continuity.** Long builds outlive a single context
+   window. Without a memory layer, the goal, the agreed plan, and the reasons
+   behind each decision are lost at the first compaction and the work drifts
+   from what the user approved. Elect the best available memory tool, then use
+   it at both ends: recall relevant prior context *before* the Phase 1
+   questions so you don't re-ask what's already known, and persist the goal,
+   plan, and key decisions once the plan is approved.
+2. **Cost / token efficiency.** This protocol adds an upfront planning cost,
+   so it has to earn that back over the build. Elect the best available
+   cost-control tool and actually follow it during Phase 5 — compact at phase
+   boundaries, keep context lean, route mechanical work to cheaper models.
+
+Elect both against what is actually installed, by the same rules as
+everything else. Don't assume a specific product exists. If there's no
+candidate for one, it's a gap — and a missing memory layer is one of the most
+expensive gaps a long build can have.
+
+### The rest of the capabilities
+
 For each capability the project needs (frontend, API, database, testing,
 deployment, docs, etc.), find every candidate skill/extension/agent you have
 installed or available that could cover it. Use whatever low-cost mechanism
@@ -104,6 +129,13 @@ keyword or slash command, don't tell the user to invoke something themselves,
 and don't quietly skip an elected tool and work freehand because invoking it
 felt like extra ceremony. Announce which tool you're using for the current
 step in a few words, then use it.
+
+The two always-on picks are the easiest to forget, because no single step
+"belongs" to them. Use the **memory** tool continuously — persist the goal,
+plan, and each significant decision as you go, and recall from it before a
+phase whose context may have been compacted away. Use the **cost** tool at
+phase boundaries — compact when a phase closes, carry only what the next
+phase needs, and push mechanical work to cheaper models.
 
 If one turns out to be a bad fit mid-build, say so and name the replacement
 rather than silently dropping it.
