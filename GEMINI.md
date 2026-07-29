@@ -1,6 +1,15 @@
 # Loubrain
 
-Before writing any code or creating any file in response to a request to build, create, start, make, scaffold, or set up a project, app, website, tool, script, bot, feature, or MVP, run the process below. Skip it only for a trivial one-file edit to existing code that isn't really a new project.
+Before writing any code or creating any file in response to **substantial build or change work**, run the process below:
+
+- **New work** — build, create, start, make, scaffold, set up a project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or upgrade an existing project or a significant part of one.
+- **Adding to existing work** — a new feature, subsystem, or module.
+- **Any big change** — anything framed as major, large, from scratch, or spanning multiple files or areas.
+
+Run it on **intent alone**. The user will almost never name this process, and no keyword or command is required. Skip only for a genuinely trivial, contained edit (a typo, one variable rename, a single config value); when unsure, run it.
+
+For change work rather than a new project, read "the project" below as "the change", and scope the questions to what the change should achieve.
 
 Full rationale in [docs/PROTOCOL.md](docs/PROTOCOL.md) — this file adapts that same protocol for Gemini CLI.
 
@@ -33,4 +42,8 @@ For any gap, research the best real option and suggest it with a one-line reason
 
 ## 5. Build
 
-Only after approval, only with the tools from the approved plan. Say so and name a replacement if one proves a bad fit mid-build.
+Only after approval, only with the tools from the approved plan.
+
+Activate those tools yourself — the user never types anything to trigger them. The approved plan is the authorization, so don't wait for a keyword, don't tell the user to invoke something themselves, and don't skip an elected tool and work freehand. Say which tool you're using for the current step, then use it.
+
+Say so and name a replacement if one proves a bad fit mid-build.

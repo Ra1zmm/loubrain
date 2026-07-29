@@ -6,6 +6,22 @@ All notable changes to Loubrain are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- Loubrain now triggers on **change work**, not just new projects: improving,
+  refactoring, rewriting, redesigning, restructuring, migrating, modernizing,
+  or extending an existing project, adding a non-trivial feature, or any
+  change framed as big/major/from-scratch.
+- Made explicit that Loubrain fires on **intent alone** — no keyword, no
+  `/loubrain`, no confirmation. Waiting to be named is a failure to run.
+- Phase 5 now states that elected skills are invoked directly by the
+  assistant once the roster is approved. The user never types a keyword or
+  slash command to activate them; the approved roster is the authorization.
+- The trigger hook matches change verbs and scope nouns, plus standalone
+  big-change phrases ("from scratch", "major refactor"). Trivial edits
+  ("rename this variable", "fix the typo") still correctly stay silent.
+- Same changes carried into docs/PROTOCOL.md and all three cross-tool
+  adapters so behavior is consistent across assistants.
+
 ### Fixed
 - Installers now honor `CLAUDE_CONFIG_DIR` instead of assuming `~/.claude`.
   Previously, users with a relocated Claude config got a stray directory in

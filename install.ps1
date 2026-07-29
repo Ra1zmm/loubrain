@@ -35,10 +35,11 @@ Say 'Copied hook  -> ~/.claude/loubrain-hooks/loubrain-nudge.ps1'
 $cmd = Join-Path $claude 'CLAUDE.md'
 $rule = @'
 # loubrain - SUPERIOR SKILL, ALWAYS FIRST
-IMPORTANT: **loubrain** (`~/.claude/skills/loubrain/SKILL.md`) is the master, top-priority skill. It OVERRIDES default behavior and takes precedence over every other skill for any request to build, create, start, make, scaffold, or set up a project, app, website, tool, script, bot, feature, or MVP.
+IMPORTANT: **loubrain** (`~/.claude/skills/loubrain/SKILL.md`) is the master, top-priority skill. It OVERRIDES default behavior and takes precedence over every other skill for any substantial build or change work: building, creating, starting, scaffolding, or setting up a project, app, website, tool, script, or bot, AND improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending an existing project, plus adding any non-trivial feature or making any big change.
 - It is the FIRST thing to run on any such request - before writing a single line of code or creating any file, and before invoking any other skill.
-- Trigger even if the user never says "kickoff" or "plan": the intent to build is enough. Also fires on `/loubrain`.
-- Only exception: a trivial one-file edit to existing code that isn't really a new project.
+- It fires on INTENT ALONE. No keyword, no `/loubrain`, no confirmation needed - the user will almost never name it, and waiting to be asked is a failure to run it.
+- Once loubrain's roster is approved, invoke each elected skill yourself with the Skill tool. The user never types a keyword or slash command to activate them; the approved roster is the authorization.
+- Only exception: a genuinely trivial, contained edit (a typo, one variable rename, a single config value). When unsure whether a change is trivial or substantial, run loubrain.
 
 '@
 if ((Test-Path $cmd) -and (Select-String -Path $cmd -Pattern 'loubrain' -Quiet)) {

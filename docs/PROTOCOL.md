@@ -9,10 +9,30 @@ start here.
 
 ## When it runs
 
-Before writing any code or creating any file, on any request to build, create,
-start, make, scaffold, or set up a project, app, website, tool, script, bot,
-feature, or MVP — even if the user never says "kickoff" or "plan." Skip only
-for a trivial one-file edit to existing code that isn't really a new project.
+Before writing any code or creating any file, on any **substantial build or
+change work**:
+
+- **New work** — build, create, start, make, scaffold, set up, bootstrap a
+  project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign,
+  restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or
+  upgrade an existing project or a significant part of one.
+- **Adding to existing work** — a new feature, subsystem, or module.
+- **Any big change** — anything framed as major, large, from scratch, or
+  spanning multiple files or areas.
+
+It runs on **intent alone**. The user will almost never name it, and no
+keyword, slash command, or confirmation is required — waiting to be asked is
+a failure to run it.
+
+Skip only for a genuinely trivial, contained edit: a typo, one variable
+rename, a single config value. When unsure whether a change is trivial or
+substantial, run the protocol — a short brief costs far less than doing a big
+change with the wrong tools.
+
+For change work rather than a new project, read "the project" below as "the
+change", and scope the Phase 1 questions to what the change should achieve
+instead of re-interviewing the user about a codebase that already exists.
 
 ## Phase 1 — Understand the goal
 
@@ -74,9 +94,19 @@ it. Never install anything without the user's explicit OK.
 
 ## Phase 5 — Build
 
-Only after approval. Use each capability's elected tool. If one turns out to
-be a bad fit mid-build, say so and name the replacement rather than
-silently dropping it.
+Only after approval. Use each capability's elected tool.
+
+**Activate the elected tools yourself — the user never types anything.** When
+you reach a capability's part of the work, invoke its elected tool directly
+through whatever mechanism your host provides. The approved plan *is* the
+authorization: the user already signed off in Phase 3, so don't wait for a
+keyword or slash command, don't tell the user to invoke something themselves,
+and don't quietly skip an elected tool and work freehand because invoking it
+felt like extra ceremony. Announce which tool you're using for the current
+step in a few words, then use it.
+
+If one turns out to be a bad fit mid-build, say so and name the replacement
+rather than silently dropping it.
 
 ## Cost discipline
 

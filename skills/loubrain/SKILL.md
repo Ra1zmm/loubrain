@@ -1,13 +1,26 @@
 ---
 name: loubrain
-description: Run this FIRST before starting, building, creating, or scaffolding ANY new project — before writing any code or files. Use whenever the user asks to build/create/start/make a project, app, tool, website, script, bot, or MVP, even if they never say "kickoff" or "plan". This is the master skill that decides the whole toolset the project builds with: it extracts the user's true end goal, then for each capability picks the single best skill AND agent from the owner's installed library — when several compete for the same goal (e.g. 4-5 design skills) it runs a Sonnet 5 election backed by web search and Reddit/blog evidence to choose the best one. Outputs the full roster of chosen skills and agents, suggests any missing skill worth installing, and only starts building after the user gives the green light.
+description: Run this FIRST, automatically, before ANY substantial build or change work — before writing code or creating files. Triggers on building/creating/starting/scaffolding a new project, app, tool, website, script, or bot, AND on improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending an existing project, plus adding any non-trivial feature or making any big/major change. No keyword or slash command is ever required — the user's intent to build or substantially change something is the trigger, even if they never say "loubrain", "kickoff", or "plan". This is the master skill that decides the whole toolset the work uses: it extracts the user's true end goal, then for each capability picks the single best skill AND agent from the owner's installed library — when several compete for the same goal (e.g. 4-5 design skills) it runs a Sonnet 5 election backed by web search and Reddit/blog evidence to choose the best one. Outputs the full roster of chosen skills and agents, suggests any missing skill worth installing, and only starts work after the user gives the green light.
 ---
 
 # Loubrain
 
-This is the superior/master skill — it runs before everything and decides which of the owner's skills and agents the project will actually build with, so the build uses the best tool for each job instead of whatever gets grabbed by default.
+This is the superior/master skill — it runs before everything and decides which of the owner's skills and agents the work will actually use, so the build uses the best tool for each job instead of whatever gets grabbed by default.
 
 Goal first, toolset second, code last. Never write project code before finishing the phases below, and never start the build until the user approves the roster. The visible output is a short kickoff brief, then — after approval — the actual build.
+
+## When this runs (automatic — no keyword needed)
+
+Loubrain is not something the user invokes. It fires on **intent**, and the user will almost never name it. Treat the presence of any of these as the trigger, with no keyword, no `/loubrain`, and no confirmation that the skill should run:
+
+- **New work** — build, create, start, make, scaffold, set up, bootstrap, spin up a project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or upgrade an existing project or a significant part of one.
+- **Adding to existing work** — add a feature, add a subsystem, extend the project with something new.
+- **Any big change** — anything the user frames as major, large, from scratch, or spanning multiple files/areas, even if they don't use one of the verbs above.
+
+The one exception: a genuinely trivial, contained edit to existing code — fix this typo, rename this variable, adjust this one function, tweak a config value. Those don't need a toolset election. When you're unsure whether a change is trivial or substantial, run Loubrain; a short kickoff brief costs far less than building a big change with the wrong tools.
+
+For change work (not a brand-new project), the phases below still apply — read "the project" as "the change", and scope Phase 1's questions to what the change is meant to achieve rather than re-interviewing the user about a codebase that already exists.
 
 ## Phase 1 — Understand the goal (ask thoroughly)
 
@@ -88,4 +101,16 @@ Only when Phase 2 found gaps:
 
 ## Phase 5 — Build (only after green light)
 
-Once the user approves the roster, start building. At each build phase, invoke that capability's elected skill via the Skill tool and hand off to its elected agent where one was chosen. Don't silently drop roster picks — if one proves a bad fit mid-build, say so and name the replacement.
+Once the user approves the roster, start building.
+
+**Invoke the elected skills yourself — the user never types anything.** When you reach a capability's part of the work, call its elected skill directly with the Skill tool, and hand off to its elected agent where one was chosen. The roster *is* the authorization: the user already approved these picks in Phase 3, so there is nothing left to ask and nothing left for them to trigger.
+
+Concretely, this means you must never:
+
+- wait for the user to type `/skill-name` or say a magic word before an elected skill is used,
+- tell the user to invoke a skill themselves, or ask "should I use X now?" for a skill already on the approved roster,
+- quietly skip an elected skill and do the work freehand because invoking it felt like extra ceremony.
+
+The whole point of the election is that the decision is already made — Phase 5 is execution. Announce which skill you're using for the current step in a few words so the user can follow along, then use it.
+
+Don't silently drop roster picks — if one proves a bad fit mid-build, say so and name the replacement.

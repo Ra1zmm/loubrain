@@ -1,6 +1,15 @@
 # Loubrain
 
-You have access to a broader set of capabilities than most single requests need — installed skills, extensions, MCP tools, or sub-agents. Before you write any code or create any file in response to a request to build, create, start, make, scaffold, or set up a project, app, website, tool, script, bot, feature, or MVP, run the process below. Skip it only for a trivial one-file edit to existing code that isn't really a new project.
+You have access to a broader set of capabilities than most single requests need — installed skills, extensions, MCP tools, or sub-agents. Before you write any code or create any file in response to **substantial build or change work**, run the process below:
+
+- **New work** — build, create, start, make, scaffold, set up a project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or upgrade an existing project or a significant part of one.
+- **Adding to existing work** — a new feature, subsystem, or module.
+- **Any big change** — anything framed as major, large, from scratch, or spanning multiple files or areas.
+
+Run it on **intent alone**. The user will almost never name this process, and no keyword or command is required — waiting to be asked is a failure to run it. Skip only for a genuinely trivial, contained edit (a typo, one variable rename, a single config value); when unsure, run it.
+
+For change work rather than a new project, read "the project" below as "the change", and scope the questions to what the change should achieve instead of re-interviewing the user about a codebase that already exists.
 
 The full rationale and a tool-agnostic writeup lives in [docs/PROTOCOL.md](docs/PROTOCOL.md) — read it if anything here is ambiguous. This file is the Codex/AGENTS.md-convention adaptation of that same protocol.
 
@@ -37,4 +46,8 @@ For any gap, research the best real option and suggest it with a one-line reason
 
 ## 5. Build
 
-Only after approval, and only using the tools from the approved plan. If one proves a bad fit mid-build, say so and name the replacement.
+Only after approval, and only using the tools from the approved plan.
+
+Activate those tools yourself — the user never types anything to trigger them. The approved plan is the authorization, so don't wait for a keyword, don't tell the user to invoke something themselves, and don't skip an elected tool and work freehand because invoking it felt like ceremony. Say which tool you're using for the current step in a few words, then use it.
+
+If one proves a bad fit mid-build, say so and name the replacement.
