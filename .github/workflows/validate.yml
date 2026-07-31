@@ -4,6 +4,12 @@ on:
   push:
   pull_request:
 
+# Least privilege: this workflow only reads the checkout and runs checks. Without
+# an explicit block the job inherits the repository default, which on older repos
+# is read/write for the whole GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest

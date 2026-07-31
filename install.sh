@@ -51,7 +51,16 @@ hook_cmd="powershell -NoProfile -ExecutionPolicy Bypass -File \"$claude/loubrain
 if [ -f "$sf" ] && grep -q "loubrain-nudge" "$sf"; then
   say "settings.json already wires the loubrain hook - left as is."
 elif command -v jq >/dev/null 2>&1; then
-  [ -f "$sf" ] && cp "$sf" "$sf.bak-$stamp" || echo '{}' > "$sf"
+  # Deliberately if/else, not `[ -f x ] && cp ... || echo '{}' > x`: in that
+  # form a FAILING cp (read-only dir, full disk, bad permissions) falls through
+  # to the `||` branch and overwrites the user's real settings.json with {},
+  # destroying their whole config at the exact moment backup was most needed.
+  if [ -f "$sf" ]; then
+    cp "$sf" "$sf.bak-$stamp"          # set -e aborts here if the backup fails
+    chmod 600 "$sf.bak-$stamp" 2>/dev/null || true  # may contain API keys
+  else
+    echo '{}' > "$sf"
+  fi
   entry="$(jq -n --arg c "$hook_cmd" '{type:"command",command:$c,timeout:10,statusMessage:"Loubrain: checking for new-project intent..."}')"
   tmp="$(mktemp)"
   jq --argjson e "$entry" '
