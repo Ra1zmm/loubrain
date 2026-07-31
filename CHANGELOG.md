@@ -7,6 +7,33 @@ All notable changes to Loubrain are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Downloadable `dist/loubrain.skill`** — a plain ZIP anyone can upload to
+  claude.ai or Claude Code with no git and no terminal. `build-skill.mjs`
+  rebuilds it with zero dependencies, and CI fails if the shipped package
+  drifts from `SKILL.md` or contains backslash paths.
+- Graceful handling of small or empty skill libraries: skip the election,
+  keep the brief short, build with general abilities, and cap install
+  suggestions at the two or three that would actually change the outcome.
+- Fallbacks when an always-on capability has no candidate — write the goal
+  and roster to a project file for memory, apply compaction discipline
+  directly for cost — instead of stalling or inventing a winner.
+- Fallback to a numbered list when `AskUserQuestion` is unavailable, and to
+  internal-only scoring when web search is unavailable.
+
+### Fixed
+- **Portability: the skill assumed one specific machine.** It grepped a
+  hardcoded `~/.claude/skills`, which is wrong whenever `CLAUDE_CONFIG_DIR`
+  is set — and a wrong path returns no matches, which is indistinguishable
+  from "this user has no candidates", so the election would quietly never
+  fire. It also cited a "400+ skill" library and named the author's own
+  installed skills as the expected candidates. Capabilities are now
+  identified by *what a skill does*, read from its description, never by name.
+- Model pinned via the durable `sonnet` alias rather than a versioned ID.
+- Phase 5 reordered: the "never do this" list now sits with the rule it
+  qualifies instead of being separated by two other paragraphs.
+- Phase 1 scales the interview to the job, so a one-file script doesn't get
+  interrogated about hosting and scale.
+
 - **Two capabilities are now always on the roster**, regardless of the
   project: a **session-memory** skill (the `claude-mem` plugin or equivalent)
   so the goal, roster, and decisions survive a compaction, and a
