@@ -54,7 +54,8 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 - **🎯 Goal-first.** Extracts the real end goal — what you'll *do* with the result — before a line of code. Asks as many focused questions as it takes, each with a recommended default so you can just hit accept.
 - **🗳️ Skill elections.** When 4–5 skills compete for the same job, Loubrain spins up a **Claude Sonnet** subagent that reads each candidate, researches the approaches on the web + Reddit/dev blogs, and scores them on goal-match, specificity, coverage, and external verdict. One winner per capability.
 - **🤖 Agents too.** Reviewers, resolvers, and other subagents are elected the same way — not left to chance.
-- **🧠 Memory + cost always on.** Every roster includes two capabilities regardless of the project: a **session-memory** skill (`claude-mem` or equivalent) so the goal and plan survive compaction, and a **credit-efficiency** skill so a long build stays cheap. Both are elected from what you actually have — nothing is hardcoded.
+- **🧠 Memory + cost always on.** Every roster includes two capabilities regardless of the project: a **session-memory** skill so the goal and plan survive compaction, and a **credit-efficiency** skill so a long build stays cheap. Both are elected by *what a skill does*, read from its description — never by name — so this works on any setup.
+- **📦 Works with any library, including none.** Loubrain doesn't assume you have hundreds of skills installed. With a thin library it skips the election, keeps the brief short, builds with general abilities, and suggests at most two or three installs that would actually change the outcome — no shopping list before you get anything built.
 - **💸 Cost-aware.** The election (the expensive, research-heavy part) runs on Sonnet, not the main model, and only fires when a capability genuinely has 2+ rivals. Single-option jobs skip it entirely.
 - **🔌 Gap suggestions.** Missing a capability? Loubrain researches the best installable skill/plugin and suggests it — with a source — before you build. Never installs without your OK.
 - **✋ Green-light gate.** Shows the full roster and stops. You approve, swap, or drop picks before anything is built.
@@ -88,7 +89,25 @@ The adapted files describe the same five phases but never name a Claude-specific
 
 ## Installation
 
-### Claude Code (full version)
+### Easiest: download the `.skill` file and upload it
+
+No terminal, no git. Works on **claude.ai** and in **Claude Code**.
+
+1. Download **[`dist/loubrain.skill`](dist/loubrain.skill)** — on GitHub, open the file and click **Download raw file**.
+2. Upload it to Claude:
+   - **claude.ai** → Settings → Capabilities → Skills → **Upload skill**
+   - **Claude Code** → drop the file in, or place the unzipped `loubrain/` folder in your skills directory
+3. That's it. Loubrain now runs automatically on build and change requests.
+
+> The uploaded skill gives you all five phases. The optional installer below adds two *enforcement* extras that a plain upload can't: the global `CLAUDE.md` override rule and the `UserPromptSubmit` hook. The skill works without them — they just make it harder for Claude to forget.
+
+To rebuild the package after editing the skill:
+
+```bash
+node build-skill.mjs
+```
+
+### Claude Code (full version, with enforcement)
 
 ```powershell
 # Windows (PowerShell)
@@ -140,10 +159,12 @@ Loubrain takes over on its own: asks what it needs, shows you the roster, waits 
 
 ```
 loubrain/
+├── dist/loubrain.skill           # ← download this to upload to Claude
+├── build-skill.mjs               # rebuilds the .skill (no dependencies)
 ├── skills/loubrain/SKILL.md      # Claude Code: the full skill (the 5-phase logic)
-├── skills/loubrain/evals/        # test prompts + assertions
+├── skills/loubrain/evals/        # test prompts + assertions (dev only, not shipped)
 ├── hooks/loubrain-nudge.ps1      # Claude Code: UserPromptSubmit "always-first" nudge
-├── install.ps1 / install.sh      # Claude Code installers
+├── install.ps1 / install.sh      # Claude Code installers (adds enforcement)
 ├── AGENTS.md                     # Codex CLI / AGENTS.md-convention tools
 ├── GEMINI.md                     # Gemini CLI
 ├── .cursor/rules/loubrain.mdc    # Cursor

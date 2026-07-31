@@ -92,3 +92,28 @@ jobs:
           f=.cursor/rules/loubrain.mdc
           head -1 "$f" | grep -qx -- '---'
           grep -qE '^description:[[:space:]]*\S' "$f"
+
+      - name: shipped .skill matches the source skill
+        run: |
+          # The .skill is what most people download, so it must never lag
+          # behind SKILL.md. Rebuild and compare against the committed copy.
+          test -f dist/loubrain.skill || { echo "::error::dist/loubrain.skill is missing"; exit 1; }
+          mkdir -p /tmp/skillcheck && unzip -oq dist/loubrain.skill -d /tmp/skillcheck
+          test -f /tmp/skillcheck/loubrain/SKILL.md \
+            || { echo "::error::.skill must contain loubrain/SKILL.md at its root"; exit 1; }
+          if ! diff -q /tmp/skillcheck/loubrain/SKILL.md skills/loubrain/SKILL.md; then
+            echo "::error::dist/loubrain.skill is stale - run 'node build-skill.mjs' and commit the result"
+            exit 1
+          fi
+          # Entry names must use forward slashes or the archive breaks on macOS/Linux
+          if unzip -l dist/loubrain.skill | grep -q '\\'; then
+            echo "::error::.skill contains backslash paths; rebuild with build-skill.mjs"
+            exit 1
+          fi
+
+      - name: build-skill.mjs is reproducible
+        run: |
+          cp dist/loubrain.skill /tmp/before.skill
+          node build-skill.mjs
+          cmp /tmp/before.skill dist/loubrain.skill \
+            || { echo "::error::rebuilding produced a different .skill than the committed one"; exit 1; }
