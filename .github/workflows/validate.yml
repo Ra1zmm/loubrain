@@ -131,11 +131,46 @@ jobs:
             exit 1
           fi
 
-      - name: Cursor rule has valid frontmatter
+      - name: adapters conform to each tool's documented format
         run: |
+          # Cursor: project rules must live in .cursor/rules as .mdc with YAML
+          # frontmatter. A .md file there, or an .mdc without frontmatter, is
+          # silently ignored -- so this check is the difference between the
+          # rule loading and doing nothing at all.
           f=.cursor/rules/loubrain.mdc
-          head -1 "$f" | grep -qx -- '---'
-          grep -qE '^description:[[:space:]]*\S' "$f"
+          test -f "$f" || { echo "::error::Cursor rule must be .cursor/rules/loubrain.mdc"; exit 1; }
+          head -1 "$f" | grep -qx -- '---' || { echo "::error::$f needs YAML frontmatter"; exit 1; }
+          grep -qE '^alwaysApply:[[:space:]]*true' "$f" \
+            || { echo "::error::$f must set alwaysApply: true to apply on every request"; exit 1; }
+
+          # Codex reads AGENTS.md from the git root down; Gemini reads
+          # GEMINI.md. Both are plain markdown with no frontmatter.
+          for f in AGENTS.md GEMINI.md; do
+            test -s "$f" || { echo "::error::$f missing or empty"; exit 1; }
+            head -1 "$f" | grep -qx -- '---' \
+              && { echo "::error::$f must be plain markdown, not frontmatter"; exit 1; }
+          done
+          echo "adapters conform: Cursor .mdc, Codex AGENTS.md, Gemini GEMINI.md"
+
+      - name: adapters keep feature parity with the skill
+        run: |
+          # An adapter that silently loses a behavior is worse than no adapter:
+          # the user thinks Loubrain is running and gets a different process.
+          fail=0
+          check() {
+            for f in skills/loubrain/SKILL.md AGENTS.md GEMINI.md .cursor/rules/loubrain.mdc; do
+              grep -qiE "$2" "$f" || { echo "::error file=$f::missing behavior: $1"; fail=1; }
+            done
+          }
+          check "fires on intent, no keyword"    "intent alone|no keyword"
+          check "covers change work"             "refactor"
+          check "trivial-edit exception"         "trivial"
+          check "election only when 2+ compete"  "2\+|two or more"
+          check "always-on session memory"       "session memory"
+          check "always-on cost efficiency"      "cost|credit|token"
+          check "waits for approval"             "approval|green light"
+          check "assistant invokes tools itself" "yourself|never types"
+          exit $fail
 
       - name: shipped .skill matches the source skill
         run: |

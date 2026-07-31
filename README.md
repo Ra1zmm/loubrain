@@ -78,14 +78,31 @@ Loubrain runs in five phases. Full detail in [docs/how-it-works.md](docs/how-it-
 
 Loubrain's logic is written once, tool-agnostically, in [docs/PROTOCOL.md](docs/PROTOCOL.md). Each assistant gets an adaptation into that tool's own convention for loading standing instructions:
 
-| Assistant | File | Scope | Notes |
+| Assistant | File | Per-project | Every project (global) |
 |---|---|---|---|
-| **Claude Code** | `skills/loubrain/SKILL.md` | global (`~/.claude`) | Full version — real skill/agent election via a pinned Sonnet subagent, `AskUserQuestion` prompts, a `CLAUDE.md` override rule, and a `UserPromptSubmit` hook. Installed by `install.ps1` / `install.sh`. |
-| **Codex CLI** (and other `AGENTS.md`-convention tools) | `AGENTS.md` | project root | Auto-read by Codex when present at the repo root. Copy it into any repo where you want Loubrain active. |
-| **Gemini CLI** | `GEMINI.md` | project root, or `~/.gemini/GEMINI.md` for global | Same convention as `CLAUDE.md`, Gemini's own filename. |
-| **Cursor** | `.cursor/rules/loubrain.mdc` | project | Cursor project rule, `alwaysApply: true`. Copy the `.cursor/rules/` folder into your project. |
+| **Claude Code** | `skills/loubrain/SKILL.md` | — | `~/.claude/skills/loubrain/` (installer does this) |
+| **Codex CLI** (and other `AGENTS.md` tools) | `AGENTS.md` | repo root | `~/.codex/AGENTS.md` |
+| **Gemini CLI** | `GEMINI.md` | project root | `~/.gemini/GEMINI.md` |
+| **Cursor** | `loubrain.mdc` | `.cursor/rules/` | Cursor Settings → Rules (User Rules) |
 
-The adapted files describe the same five phases but never name a Claude-specific tool (`Skill`, `Agent`, `AskUserQuestion`) — they lean on whatever equivalent mechanism the host tool provides (installed-capability lists, web search, sub-model delegation, a way to ask the user questions). If you use an assistant not listed here, [docs/PROTOCOL.md](docs/PROTOCOL.md) has everything needed to write a new adapter — PRs welcome.
+**Claude Code** gets the richest version: a real skill/agent election via a pinned Sonnet subagent, `AskUserQuestion` prompts, plus the `CLAUDE.md` override rule and `UserPromptSubmit` hook that the installer wires up.
+
+Each of the other three loads instructions from that tool's own documented convention — Codex walks from the git root down, concatenating `AGENTS.md` files (deeper files win); Gemini reads `~/.gemini/GEMINI.md` first then the project hierarchy; Cursor loads every `.mdc` in `.cursor/rules/` with `alwaysApply: true` on every request. The adapted files describe the same five phases but never name a Claude-specific tool — they lean on whatever equivalent the host provides.
+
+If you use an assistant not listed here, [docs/PROTOCOL.md](docs/PROTOCOL.md) has everything needed to write a new adapter — PRs welcome.
+
+### Confirming it actually loaded
+
+Each tool can tell you what instructions it picked up:
+
+| Tool | How to check |
+|---|---|
+| **Claude Code** | Ask *"what skills are available?"* — `loubrain` should be listed |
+| **Codex CLI** | `codex --ask-for-approval never "Show which instruction files are active."` |
+| **Gemini CLI** | `/memory show` — displays the combined context being sent |
+| **Cursor** | The rule appears in the Agent sidebar context when active |
+
+Then try a real trigger — *"refactor this project to use X"* — and you should get a goal question and a roster **before** any code.
 
 ## Installation
 
@@ -129,19 +146,28 @@ Restart Claude Code (or open `/hooks` once) after installing so the hook loads.
 
 ### Codex CLI, Gemini CLI, Cursor, or other assistants
 
-These tools read standing instructions straight from your project (no install script needed):
+These tools read standing instructions straight from a file — no install script needed.
+
+**One project:**
 
 ```bash
 git clone https://github.com/Ra1zmm/loubrain.git
-# Codex CLI / AGENTS.md-convention tools:
-cp loubrain/AGENTS.md your-project/AGENTS.md
-# Gemini CLI:
-cp loubrain/GEMINI.md your-project/GEMINI.md
-# Cursor:
-cp -r loubrain/.cursor/rules your-project/.cursor/rules
+cp loubrain/AGENTS.md  your-project/AGENTS.md          # Codex CLI
+cp loubrain/GEMINI.md  your-project/GEMINI.md          # Gemini CLI
+cp -r loubrain/.cursor/rules your-project/.cursor/     # Cursor
 ```
 
-Check your tool's docs for where it expects the file (project root vs. a global home directory) if you want it active everywhere instead of one repo.
+**Every project (recommended):**
+
+```bash
+mkdir -p ~/.codex ~/.gemini
+cp loubrain/AGENTS.md ~/.codex/AGENTS.md               # Codex CLI, all repos
+cp loubrain/GEMINI.md ~/.gemini/GEMINI.md              # Gemini CLI, all repos
+```
+
+For Cursor, paste the body of `.cursor/rules/loubrain.mdc` into **Settings → Rules → User Rules** to apply it everywhere instead of per-project.
+
+Codex and Gemini both merge these hierarchically — a project-level file layers on top of the global one rather than replacing it, so you can keep Loubrain global and still add project-specific notes.
 
 ## Usage
 
