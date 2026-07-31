@@ -23,6 +23,26 @@ jobs:
           grep -qE '^name:[[:space:]]*loubrain[[:space:]]*$' "$f"
           grep -qE '^description:[[:space:]]*\S' "$f"
 
+      - name: description fits Claude's 1024-character limit
+        run: |
+          # Claude's skill importer rejects the upload outright with
+          # "field 'description' in SKILL.md must be at most 1024 characters".
+          # Easy to blow past when adding trigger keywords, and the failure only
+          # shows up at upload time, so gate it here.
+          python3 - <<'PY'
+          import re, sys
+          text = open('skills/loubrain/SKILL.md', encoding='utf-8').read()
+          m = re.search(r'^description:[ \t]*(.*)$', text, re.M)
+          if not m:
+              print('::error::no description field'); sys.exit(1)
+          n = len(m.group(1).strip())
+          if n > 1024:
+              print(f'::error file=skills/loubrain/SKILL.md::description is {n} chars, '
+                    f'{n - 1024} over the 1024 limit - Claude will reject the upload')
+              sys.exit(1)
+          print(f'description: {n}/1024 chars ({1024 - n} headroom)')
+          PY
+
       - name: frontmatter is parseable YAML
         run: |
           # A plain (unquoted) YAML scalar cannot contain ": " -- the parser
