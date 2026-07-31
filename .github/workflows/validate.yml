@@ -17,6 +17,44 @@ jobs:
           grep -qE '^name:[[:space:]]*loubrain[[:space:]]*$' "$f"
           grep -qE '^description:[[:space:]]*\S' "$f"
 
+      - name: frontmatter is parseable YAML
+        run: |
+          # A plain (unquoted) YAML scalar cannot contain ": " -- the parser
+          # reads it as a nested mapping and the whole skill fails to load.
+          # Easy to reintroduce when editing prose in the description.
+          python3 - <<'PY'
+          import re, sys, glob
+          try:
+              import yaml
+          except ImportError:
+              yaml = None
+          failed = False
+          for path in ['skills/loubrain/SKILL.md', '.cursor/rules/loubrain.mdc']:
+              text = open(path, encoding='utf-8').read()
+              m = re.match(r'^---\r?\n(.*?)\r?\n---', text, re.S)
+              if not m:
+                  print(f'::error file={path}::missing frontmatter'); failed = True; continue
+              block = m.group(1)
+              if yaml:
+                  try:
+                      yaml.safe_load(block)
+                  except Exception as e:
+                      print(f'::error file={path}::frontmatter is not valid YAML: {e}')
+                      failed = True
+                      continue
+              for i, line in enumerate(block.split('\n'), 1):
+                  if not line or line[0].isspace() or ':' not in line:
+                      continue
+                  val = line.split(':', 1)[1].strip()
+                  quoted = (len(val) > 1 and val[0] == val[-1] and val[0] in '"\'') or val[:1] in ('>', '|')
+                  if not quoted and ': ' in val:
+                      print(f'::error file={path},line={i}::unquoted ": " in a plain YAML value -- '
+                            f'quote the value or replace the colon')
+                      failed = True
+              print(f'ok: {path}')
+          sys.exit(1 if failed else 0)
+          PY
+
       - name: evals.json is valid JSON
         run: python3 -c "import json; json.load(open('skills/loubrain/evals/evals.json'))"
 
