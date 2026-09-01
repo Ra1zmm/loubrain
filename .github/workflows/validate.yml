@@ -128,6 +128,33 @@ jobs:
           if ($failed) { throw "$failed trigger case(s) failed" }
           Write-Host "trigger accuracy: $($shouldFire.Count + $shouldStaySilent.Count)/$($shouldFire.Count + $shouldStaySilent.Count)"
 
+      - name: hook triggers in non-English languages
+        shell: pwsh
+        run: |
+          # The hook must read stdin as UTF-8. [Console]::In decodes with the
+          # ANSI codepage on Windows PowerShell, which corrupts every non-ASCII
+          # character and silently kills every non-English trigger.
+          $multilingual = @(
+            'crea una aplicacion de tareas con React',
+            'creer un site web pour mon restaurant',
+            'erstelle eine App fuer meine Firma',
+            'cria um site para minha loja',
+            [char]0x0441 + [char]0x043e + [char]0x0437 + [char]0x0434 + 'ai prilozhenie',
+            [char]0x521b + [char]0x5efa + 'todo',
+            [char]0x4f5c + [char]0x6210 + 'app',
+            [char]0x092c + [char]0x0928 + [char]0x093e + ' website',
+            [char]0x0623 + [char]0x0646 + [char]0x0634 + [char]0x0626 + ' site',
+            'buat aplikasi todo'
+          )
+          $failed = 0
+          foreach ($p in $multilingual) {
+            $json = @{prompt=$p} | ConvertTo-Json -Compress
+            $out = $json | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
+            if (-not $out) { Write-Host "::error::expected FIRE for non-English prompt: $p"; $failed++ }
+          }
+          if ($failed) { throw "$failed multilingual trigger(s) failed" }
+          Write-Host "multilingual triggers: $($multilingual.Count)/$($multilingual.Count)"
+
       - name: hook survives malformed input without crashing
         shell: pwsh
         run: |

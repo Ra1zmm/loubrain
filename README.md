@@ -4,7 +4,7 @@
 
 **The skill that thinks before it builds.**
 
-Loubrain runs *first* on every build **or** big-change request — new projects, refactors, rewrites, migrations, redesigns. It pins down what you actually want, elects the best tool **and** agent your library has for each job, flags what's missing, and only starts once you approve the plan. No keyword needed: it fires on intent. Full-featured on [Claude Code](https://claude.com/claude-code); portable adapters ship for Codex CLI, Gemini CLI, and Cursor.
+Loubrain runs *first* on every build **or** big-change request — new projects, refactors, rewrites, migrations, redesigns. It recalls what past sessions already established, interviews you until the goal is real, picks the best tool **and** agent for each job from what you already own, researches the web only for genuine gaps, then shows one plan and waits for your green light. No keyword needed, in any language: it fires on intent. Full-featured on [Claude Code](https://claude.com/claude-code); portable adapters ship for Codex CLI, Gemini CLI, and Cursor.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-6E56CF.svg)](https://claude.com/claude-code)
@@ -26,13 +26,15 @@ Loubrain is that step. It's the brain that runs before the hands.
 
 ```
 You: "refactor this codebase to use server components"
+     (or "refactorise ce projet", "重构这个项目", "refactoriza este proyecto")
 
 Loubrain:
-  1. Pins the goal      → asks focused questions (each with a recommended default)
-  2. Elects the toolset → best skill + agent per capability, from YOUR library
-  3. Shows the roster   → a table of exactly what it will use, and why
-  4. Flags gaps         → suggests skills worth installing, with sources
-  5. Waits for go       → works only after your green light
+  0. Recalls            → loads goal + decisions from past sessions, so nothing is re-asked
+  1. Interviews you     → one question at a time, each with a recommended default
+  2. Picks the toolset  → what you already own first; the web only for real gaps
+  3. Elects             → when several tools overlap, one wins on evidence
+  4. Shows ONE plan     → installed vs. worth-installing, clearly separated
+  5. Waits for go       → nothing installed, nothing built, until you say yes
 ```
 
 ## When it fires
@@ -51,28 +53,32 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 
 ## Features
 
-- **🎯 Goal-first.** Extracts the real end goal — what you'll *do* with the result — before a line of code. Asks as many focused questions as it takes, each with a recommended default so you can just hit accept.
+- **🎯 Goal-first, one question at a time.** Runs a real interview rather than a form dump — each question in turn, each carrying a recommended answer so you can just accept it, and facts looked up rather than asked. Scales to the job: a one-file script gets one question, a production app earns a proper interview.
+- **🌍 Any language.** Triggers on *crea*, *créer*, *erstelle*, *cria*, *создай*, *创建*, *作成*, *만들어*, *बनाओ*, *أنشئ*, *oluştur*, *buat* — and replies in your language. Intent is translated before it's judged, never pattern-matched against English.
 - **🗳️ Skill elections.** When 4–5 skills compete for the same job, Loubrain spins up a **Claude Sonnet** subagent that reads each candidate, researches the approaches on the web + Reddit/dev blogs, and scores them on goal-match, specificity, coverage, and external verdict. One winner per capability.
 - **🤖 Agents too.** Reviewers, resolvers, and other subagents are elected the same way — not left to chance.
-- **🧠 Memory + cost always on.** Every roster includes two capabilities regardless of the project: a **session-memory** skill so the goal and plan survive compaction, and a **credit-efficiency** skill so a long build stays cheap. Both are elected by *what a skill does*, read from its description — never by name — so this works on any setup.
+- **🧠 Remembers across sessions.** Before asking anything, Loubrain searches your memory skill for what past sessions already settled — so you're never re-interviewed about a project you already scoped. It then writes the goal, plan, and each decision back as it goes, so a compaction mid-build doesn't lose the thread.
+- **💾 Memory + cost always on.** Both are on every plan regardless of project, elected by *what a skill does* rather than by name, so it works on any setup.
 - **📦 Works with any library, including none.** Loubrain doesn't assume you have hundreds of skills installed. With a thin library it skips the election, keeps the brief short, builds with general abilities, and suggests at most two or three installs that would actually change the outcome — no shopping list before you get anything built.
 - **💸 Cost-aware.** The election (the expensive, research-heavy part) runs on Sonnet, not the main model, and only fires when a capability genuinely has 2+ rivals. Single-option jobs skip it entirely.
-- **🔌 Gap suggestions.** Missing a capability? Loubrain researches the best installable skill/plugin and suggests it — with a source — before you build. Never installs without your OK.
+- **🏠 What you own comes first.** Installed skills win by default — they cost nothing, need no approval, and are already trusted. Only when nothing installed fits does Loubrain search GitHub, Reddit, and dev blogs, and it judges those candidates harder because they're unvetted code from strangers.
+- **🔌 Gap suggestions.** Missing a capability? Loubrain finds the best installable option and suggests it — with its source — before you build. **Never installs anything without your explicit yes.**
 - **✋ Green-light gate.** Shows the full roster and stops. You approve, swap, or drop picks before anything is built.
 - **⚡ Always first, no keyword.** A global `CLAUDE.md` rule plus a `UserPromptSubmit` hook make it the mandatory first step on any build *or* change request. It fires on intent — you never name it, and waiting to be asked counts as a failure to run.
 - **🔗 Hands-free handoff.** Once you approve the roster, the assistant invokes each elected skill itself. No `/skill-name` to type, no second round of "should I use X now?" — the approved roster is the authorization.
 
 ## How it works
 
-Loubrain runs in five phases. Full detail in [docs/how-it-works.md](docs/how-it-works.md).
+Loubrain runs in six phases. Full detail in [docs/how-it-works.md](docs/how-it-works.md).
 
 | Phase | What happens | Model |
 |-------|--------------|-------|
-| **1. Goal** | Restate the deliverable, name the end goal, ask focused questions with recommended defaults | main |
-| **2. Election** | Find candidate skills + agents per capability; when 2+ compete, a web-researched Sonnet election picks the winner | Sonnet subagent |
-| **3. Roster** | Show the capability → skill → agent table with reasons, then wait for approval | main |
-| **4. Gaps** | Research + suggest installable skills for any capability with no candidate | main |
-| **5. Build** | After green light, invoke each elected skill + agent directly — no keyword from you | main |
+| **0. Recall** | Search your memory skill for what past sessions already established | main |
+| **1. Interview** | One question at a time, each with a recommended answer; facts looked up, not asked | main |
+| **2. Toolset** | Inventory what you own first; search GitHub/Reddit/blogs only for genuine gaps | main |
+| **3. Election** | When 2+ tools compete for one job, a web-researched Sonnet subagent picks the winner | Sonnet subagent |
+| **4. Plan + gate** | Show one plan — installed vs. worth-installing — then **stop and wait** | main |
+| **5. Build** | After the green light, invoke each pick directly — no keyword from you | main |
 
 ## Compatibility
 

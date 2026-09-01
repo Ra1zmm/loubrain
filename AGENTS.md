@@ -1,62 +1,61 @@
 # Loubrain
 
-You have access to a broader set of capabilities than most single requests need — installed skills, extensions, MCP tools, or sub-agents. Before you write any code or create any file in response to **substantial build or change work**, run the process below:
+You have access to more capabilities than any single request needs — installed skills, extensions, MCP tools, sub-agents. Before writing any code or creating any file in response to **substantial build or change work**, run the process below:
 
 - **New work** — build, create, start, make, scaffold, set up a project, app, site, tool, script, bot, service, feature, or MVP.
-- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or upgrade an existing project or a significant part of one.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, upgrade.
 - **Adding to existing work** — a new feature, subsystem, or module.
-- **Any big change** — anything framed as major, large, from scratch, or spanning multiple files or areas.
+- **Any big change** — anything framed as major, large, from scratch, or spanning multiple files.
 
-Run it on **intent alone**. The user will almost never name this process, and no keyword or command is required — waiting to be asked is a failure to run it. Skip only for a genuinely trivial, contained edit (a typo, one variable rename, a single config value); when unsure, run it.
+Run it on **intent alone, in any language**. Translate before judging; never pattern-match English. If the request means *build / create / start / change / improve* in the user's language — *crea*, *créer*, *erstelle*, *cria*, *создай*, *创建*, *作成*, *만들어*, *बनाओ*, *أنشئ*, *oluştur*, *buat* — that is the trigger. No keyword or command is required; waiting to be asked is a failure to run. Reply in the user's language.
 
-For change work rather than a new project, read "the project" below as "the change", and scope the questions to what the change should achieve instead of re-interviewing the user about a codebase that already exists.
+Skip only for a genuinely trivial, contained edit (a typo, one variable rename, a single config value); when unsure, run it. For change work rather than a new project, read "the project" below as "the change".
 
-The full rationale and a tool-agnostic writeup lives in [docs/PROTOCOL.md](docs/PROTOCOL.md) — read it if anything here is ambiguous. This file is the Codex/AGENTS.md-convention adaptation of that same protocol.
+Full rationale in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
-## 1. Pin the goal
+## Speak as one voice
 
-Restate the deliverable in 1-2 sentences and name the real end goal — what the user will *do* with the result, not just the literal ask. Ask as many questions as it takes to resolve anything that would change the build (audience, platform, scale, stack, must-haves vs nice-to-haves, delivery constraints) — but every question must move the goal forward, never filler. Offer a recommended default with each question when you can. State anything safely inferable as a one-line assumption instead of asking.
+This composes other capabilities internally, but to the user it is **one process**. Say what is happening in plain terms ("pinning down the goal", "checking what's installed"), not by narrating machinery ("now invoking X"). Presentation, not concealment — answer honestly if asked directly.
 
-## 2. Elect the best tool per capability
+## 0. Recall before spending anything
 
-**Two capabilities are always on the plan, whatever the project is:**
+Load what is already known; re-deriving context you already had is the most expensive habit there is. Use the user's session-memory capability — a memory plugin, knowledge base, or notes skill — to recover the goal, decisions, and plan from any related past session, and keep writing to it as you go. With none available, note the gap and fall back to a project file (`NOTES.md`, `PLAN.md`).
 
-1. **Session memory / continuity** — long builds outlive a context window. Without a memory layer, the goal, the agreed plan, and the reasons behind decisions vanish at the first compaction and the work drifts from what was approved. Elect the best available memory tool; recall from it *before* the step 1 questions so you don't re-ask what's already known, and persist the goal, plan, and key decisions once approved.
-2. **Cost / token efficiency** — this process adds an upfront planning cost and has to earn it back. Elect the best available cost-control tool and follow it during the build: compact at phase boundaries, keep context lean, route mechanical work to cheaper models.
+## 1. Interview until the goal is real
 
-Elect both against what's actually available, same rules as everything else — don't assume a specific product exists. No candidate for one means it's a gap, and a missing memory layer is one of the most expensive gaps a long build can have.
+The wrong goal elects the wrong toolset and builds the wrong thing. Run a relentless interview:
 
-Then list the capabilities the project itself needs (frontend, API, database, testing, deployment, docs, ...). For each one, find your candidate skills/tools/agents using the cheapest source first (an existing list of what's available, then a targeted search — never a brute-force read of everything installed).
+- **One question at a time**, waiting for each answer — several at once is bewildering.
+- **Walk the decision tree**, resolving dependencies in order.
+- **Every question carries your recommended answer**, so the user can just accept it.
+- **Look up facts, ask only for decisions.** Anything in the filesystem or repo is yours to find; judgment calls are the user's.
+- **Don't act until you have a shared understanding** of what "done" means.
 
-- 0 candidates -> it's a gap, note it for step 4.
-- 1 candidate -> use it, no comparison needed.
-- 2+ candidates genuinely competing -> compare them. Read what each actually does, and where possible check external evidence (web search) for which approach is currently better regarded for this kind of project. Score on goal-fit, specificity to this stack, how much of the job it covers alone, and what the evidence favors. Pick one winner. If you can hand this comparison off to a lighter/cheaper model, do that — it's mechanical.
+Cover audience and platform, scale and stakes, stack constraints, must-haves vs nice-to-haves, delivery and deadline, and what "best result" means to them. **Scale the interview to the job** — a one-file script may need one question; over-questioning a small task wastes patience and budget.
 
-Never assign two tools to the same capability.
+## 2. Build the plan: owned tools first, then the world
 
-## 3. Show the plan and wait
+Two capabilities are on every plan regardless of project, because both fail silently when missing: **session memory** (above) and **cost/token efficiency** (anything that audits context usage, advises compaction, tracks spend, or routes work by cost). Follow the second during the build.
 
-Before building, show:
+**2a. What the user already has comes first.** Installed tools cost nothing, need no approval, and are already trusted. Find candidates cheaply — the in-context capability list, then a targeted keyword search — never bulk-read the library. Match on *what a tool does*, read from its description, never on its name. Confirm you can actually invoke it; never plan around something you can't run.
+
+**2b. Only then search outward.** For capabilities with no local candidate, research GitHub, Reddit, and dev blogs, or use a discovery tool if the user has one. Judge external candidates harder — unvetted code from strangers. Prefer maintained, popular, clearly-scoped options, and say where each came from.
+
+**2c. Elect when several compete.** Per capability: 0 candidates → a gap; 1 → use it, no election; 2+ → compare what each does, check external evidence on which is better regarded for this kind of work, and score on goal match, specificity, coverage, and external verdict. One winner per capability, never two. Delegate the comparison to a cheaper model if you can — it's mechanical. Without web access, elect on internal criteria and say so.
+
+**Thin library?** Skip the election, keep it short, build with general abilities, and cap suggestions at the two or three that would change the outcome.
+
+## 3. One plan, then wait
 
 ```
 Goal: <1-2 sentences>
 Plan:
   <capability> -> <chosen tool>  (<why, one line>)
-Gaps: <list or "none">
+Not installed - worth adding: <name - what it improves - source>, or "none"
 ```
 
-Only name tools that actually exist. Wait for the user's go-ahead before building — they may want to swap something first.
+Only name things that exist. Separate what is **already installed** from what needs **installing**. End with *"Green light to build with this?"* and wait. **Never install anything without an explicit yes** — if declined, cover it with general abilities and say so.
 
-## 4. Suggest what's missing
+## 4. Build (only after the green light)
 
-For any gap, research the best real option and suggest it with a one-line reason and where to get it. Never install without explicit approval.
-
-## 5. Build
-
-Only after approval, and only using the tools from the approved plan.
-
-Activate those tools yourself — the user never types anything to trigger them. The approved plan is the authorization, so don't wait for a keyword, don't tell the user to invoke something themselves, and don't skip an elected tool and work freehand because invoking it felt like ceremony. Say which tool you're using for the current step in a few words, then use it.
-
-The two always-on picks are easiest to forget, since no single step belongs to them. Use **memory** continuously — persist the goal, plan, and each significant decision as you go; recall before a phase whose context may have been compacted. Use the **cost** tool at phase boundaries — compact when a phase closes, carry only what the next phase needs.
-
-If one proves a bad fit mid-build, say so and name the replacement.
+Activate the plan yourself — the approved plan is the authorization. Never wait for a keyword, never tell the user to invoke something, never skip an approved tool to work freehand. Announce each step in plain language as one process. Keep memory and the cost capability working throughout. If a pick proves a bad fit mid-build, say so and name the replacement.

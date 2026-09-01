@@ -1,152 +1,135 @@
 ---
 name: loubrain
-description: Run this FIRST, before ANY substantial build or change work — before writing code or creating files. Triggers on building, creating, starting, or scaffolding a new project, app, tool, website, script, or bot, AND on improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending an existing project, plus adding any non-trivial feature or making any big change. No keyword is needed — intent alone triggers it. Loubrain decides the whole toolset the work uses. It pins down the real end goal, then picks the single best skill AND agent per capability from the installed library, running a cheap Sonnet subagent election with web research when several compete. Every roster also carries a session-memory skill so the plan survives compaction, and a credit-efficiency skill so the build stays cheap. Shows the roster, suggests missing skills worth installing, and starts work only after the user's green light. Works with any library size, including none.
+description: Run this FIRST, before ANY substantial build or change work — before writing code or creating files. Triggers on building, creating, starting, making, or scaffolding a project, app, tool, website, script, or bot, AND on improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending existing work, plus adding any non-trivial feature or making any big change. Triggers on these intents in ANY language (crear, créer, erstellen, criar, создать, 创建, 作成, बनाना, إنشاء, oluşturmak, membuat…), not only English. No keyword or slash command is needed — intent alone triggers it. Loubrain runs the whole front end of the work. It recalls past sessions from memory, interviews the user to pin the real goal, inventories the skills and agents they already own, researches the web for anything missing, elects the single best pick per capability, then shows one roster and waits for the user's green light before installing anything or building.
 ---
 
 # Loubrain
 
-This is the superior/master skill — it runs before everything and decides which of the owner's skills and agents the work will actually use, so the build uses the best tool for each job instead of whatever gets grabbed by default.
+The master skill. It runs before everything else and decides how the work will be done: what the goal really is, which of the user's skills and agents will do each job, and what is worth installing before starting.
 
-Goal first, toolset second, code last. Never write project code before finishing the phases below, and never start the build until the user approves the roster. The visible output is a short kickoff brief, then — after approval — the actual build.
+Goal first, toolset second, code last. Never write project code, and never install anything, before the user approves the roster.
 
-## When this runs (automatic — no keyword needed)
+## When this runs (automatic — no keyword, any language)
 
-Loubrain is not something the user invokes. It fires on **intent**, and the user will almost never name it. Treat the presence of any of these as the trigger, with no keyword, no `/loubrain`, and no confirmation that the skill should run:
+Loubrain fires on **intent**, not vocabulary. The user will almost never name it, and waiting to be named is a failure to run.
 
-- **New work** — build, create, start, make, scaffold, set up, bootstrap, spin up a project, app, site, tool, script, bot, service, feature, or MVP.
-- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, or upgrade an existing project or a significant part of one.
-- **Adding to existing work** — add a feature, add a subsystem, extend the project with something new.
-- **Any big change** — anything the user frames as major, large, from scratch, or spanning multiple files/areas, even if they don't use one of the verbs above.
+- **New work** — build, create, start, make, scaffold, set up, bootstrap a project, app, site, tool, script, bot, service, feature, or MVP.
+- **Changing existing work** — improve, refactor, rewrite, redesign, restructure, rearchitect, overhaul, revamp, modernize, migrate, port, upgrade.
+- **Adding to existing work** — a new feature, subsystem, or module.
+- **Any big change** — framed as major, large, from scratch, or spanning multiple files.
 
-The one exception: a genuinely trivial, contained edit to existing code — fix this typo, rename this variable, adjust this one function, tweak a config value. Those don't need a toolset election. When you're unsure whether a change is trivial or substantial, run Loubrain; a short kickoff brief costs far less than building a big change with the wrong tools.
+**Any language counts.** Translate before judging, never pattern-match English. If the user's request means *build / create / start / change / improve* in their language, that is the trigger — Spanish *crea/construye*, French *crée/construis/refais*, German *erstelle/baue*, Portuguese *cria/constrói*, Italian *crea*, Russian *создай/сделай*, Chinese *创建/做一个/重构*, Japanese *作って/作成*, Korean *만들어*, Hindi *बनाओ*, Arabic *أنشئ/اصنع/ابنِ*, Turkish *oluştur/yap*, Indonesian *buat*, Dutch *maak*, Polish *stwórz*, and every other language the same way. Reply in the user's language.
 
-For change work (not a brand-new project), the phases below still apply — read "the project" as "the change", and scope Phase 1's questions to what the change is meant to achieve rather than re-interviewing the user about a codebase that already exists.
+The one exception: a genuinely trivial, contained edit — a typo, one variable rename, a single config value. When a change sits between trivial and substantial, run Loubrain.
 
-## Phase 1 — Understand the goal (ask thoroughly)
+For change work rather than a new project, read "the project" below as "the change".
 
-The whole skill only works if the goal is nailed — the wrong goal elects the wrong toolset and builds the wrong thing. So ask as many questions as it takes to fully pin the goal. Don't ration questions to save a turn; a few extra questions now are far cheaper than building on a guess. But every question must move the *final goal* forward — never ask filler, never ask what you can infer from the request or defaults.
+## Speak as one voice
 
-**Scale the interview to the job.** "As many as it takes" is bounded by what's actually at stake. A one-file utility script is usually clear after a single round — sometimes after none, if the request is already specific. A production app with users, hosting, and a deadline earns several rounds. Over-interviewing a small task is its own failure: it burns the user's patience and credits on a decision that had one sensible answer. If you catch yourself asking about scale and hosting for a throwaway script, stop and state assumptions instead.
+Loubrain composes other skills internally. To the user this is **one process** — Loubrain. Describe what is happening in plain terms ("pinning down the goal", "checking what's installed", "comparing the options"), not by narrating machinery ("now invoking X", "the Y skill says…").
 
-**Check memory before asking.** If a session-memory skill is installed (see Phase 2), search it first for this project or a related past session. Prior goals, decisions, and rosters answer some questions outright — re-asking what the user already told you in an earlier session wastes their time and your credits.
+This is about presentation, not concealment: keep the internals out of routine narration, but if the user asks directly what Loubrain uses, answer honestly.
 
-- Restate the project in 1-2 sentences: final deliverable, who it's for, what "done" looks like.
-- Name the end goal behind the request — what the user will actually *do* with the result.
-- Ask about anything still unknown that would change the build or the toolset election, e.g.:
-  - Who uses it and on what — audience, device, platform (web/mobile/desktop/CLI).
-  - Scale and stakes — throwaway vs. production, expected users, must it scale.
-  - Stack/tools the user already wants or must avoid.
-  - Must-have features vs. nice-to-have; what's explicitly out of scope.
-  - How it's delivered — hosting, deadline, budget, who maintains it.
-  - What "best result" means to *them* — speed to ship, polish, low cost, learnability.
+## Phase 0 — Recall before you spend anything
 
-Use AskUserQuestion where it's available (max 4 per call — batch them, call again for more rounds until the goal is clear). Keep each question short and goal-relevant, with concrete options plus room to type their own. If that tool isn't available in the environment, ask the same questions as a short numbered list in your reply — the questions matter, the widget doesn't.
+Start by loading what is already known. A build that re-derives context it already had is the single most expensive habit there is.
 
-**Every question carries a suggestion.** For each question, make your recommended answer the **first** option and mark it `(Recommended)` in the label — the best default for this project given what you know so far, so the user can just accept it instead of deciding from scratch. Base the suggestion on the goal and sensible defaults for this kind of project; the other options are the real alternatives. The user always keeps "Other" to type their own.
+Elect the user's **session-memory** capability — anything that persists knowledge across sessions (a memory plugin such as `claude-mem`, a knowledge-graph or knowledge-base skill, a session-notes or learning skill). Search it for this project or a related past session, and carry forward the goal, decisions, and roster it already holds.
 
-Only stop asking once one more question wouldn't change what you build. Anything still safely inferable → state it as a one-line assumption instead of asking.
+Then keep using it for the rest of the run: persist the goal and roster once approved, and each significant decision as it happens, so a compaction or a new session does not lose the plan.
 
-## Phase 2 — Choose the best skill AND agent per capability
+If the user has no memory skill, note it as a gap and fall back to a file in the project (`NOTES.md`, `PLAN.md`) that a later session can pick up.
 
-For every capability the project needs (frontend/design, API, database, testing, deployment, docs, and so on), pick the single best **skill** and, where relevant, the single best **agent** from the owner's installed library. Agents matter as much as skills here — e.g. a React project's review capability should elect the best reviewer agent, not be left to chance.
+## Phase 1 — Interview until the goal is real
 
-### Two capabilities are ALWAYS on the roster
+The wrong goal elects the wrong toolset and builds the wrong thing, so this phase decides everything downstream.
 
-Regardless of what the project is, every roster must include these two. They aren't project-specific — they're what keeps a long build from degrading, so they matter *more* than any single framework choice:
+Run a **relentless interview**, using the user's best installed questioning skill for it — `grilling` if present (note: `grill-me` is user-invocable only, so call `grilling`). Follow that skill's own cadence. Its method, which Loubrain adopts wherever it isn't installed:
 
-**1. Session memory / continuity.** Long builds outlive a single context window. Without a memory layer, everything learned in Phase 1-2 — the goal, the elected roster, the decisions and their reasons — is lost at the first compaction, and the build drifts from the plan the user approved. Elect whatever the user has that *persists knowledge across sessions*: a memory plugin, a knowledge-graph or knowledge-base skill, a session-notes or learning skill. Use it at both ends: **recall** relevant prior context before Phase 1's questions so you don't re-ask what's already known, and **persist** the goal, roster, and key decisions once the roster is approved.
+- **One question at a time**, waiting for the answer before the next. Several at once is bewildering.
+- **Walk the decision tree**, resolving dependencies in order — each answer determines what is worth asking next.
+- **Every question carries your recommended answer**, so the user can simply accept it. Where the interface supports options (`AskUserQuestion`), put the recommendation first and mark it `(Recommended)`.
+- **Look up facts, ask only for decisions.** Anything discoverable from the filesystem, the repo, or a tool is yours to find. The judgment calls are the user's.
+- **Do not act until you have a shared understanding** of what "done" looks like.
 
-**2. Credit / token efficiency.** Loubrain adds an upfront planning cost, so it has to earn that back over the build. Elect whatever the user has that *reduces token or credit burn*: something that audits context-window usage, advises on compaction, tracks token spend, or routes work between models by cost. Then actually follow its guidance during Phase 5 — compact at phase boundaries, keep context lean, route cheap work to cheaper models.
+Cover what would change the build or the toolset: audience and platform, scale and stakes, stack preferences and hard constraints, must-haves versus nice-to-haves, delivery and deadline, and what "best result" means to *them* — speed, polish, low cost, learnability.
 
-Identify both by **what a skill does**, read from its description — not by name. Skill names vary wildly between setups, so a name-matching approach finds nothing on most machines. If the user genuinely has no candidate for one, it's a **gap** for Phase 4, not something to invent a winner for. Fall back to what's built in: for memory, write the goal and roster into a file in the project (`NOTES.md`, `PLAN.md`) so a later session can pick them up; for cost, apply the discipline directly — compact between phases and keep context tight. Say which fallback you're using in one line.
+**Scale the interview to the job.** A one-file script may be clear after a single question; a production app with users and a deadline earns a real interview. Over-questioning a small task burns the user's patience and credits on a decision that had one sensible answer. Stop when another question would not change what you build, and state the rest as one-line assumptions.
 
-### Find candidates (cheap, inline — no subagent)
+## Phase 2 — Build the roster: owned skills first, then the world
 
-1. Start from what's already in context for free: the session's **available-skills list** (name + one-liner per installed skill) and the **available-agents list** (name + description per agent). This costs nothing and is enough for most capabilities.
-2. When you need more than the one-liner, **Grep skill frontmatter for capability keywords** rather than reading files one by one — one Grep beats dozens of Reads:
-   `Grep pattern:"react|frontend|design" path:"<skills-dir>" glob:"SKILL.md"`
-   Resolve `<skills-dir>` before using it: it's `$CLAUDE_CONFIG_DIR/skills` when that environment variable is set, otherwise `~/.claude/skills`. Don't assume `~/.claude` — plenty of setups relocate the config directory, and grepping the wrong path silently returns nothing, which looks identical to "no candidates exist". Plugin skills live outside this directory, so treat the in-context list as the authority on what's installed.
-3. Only open a full `SKILL.md` body when a name plus description genuinely can't settle whether a skill is a candidate.
+For every capability the work needs — frontend/design, API, database, testing, deployment, docs, and so on — pick the single best **skill** and, where relevant, the best **agent**.
 
-Never bulk-read the whole library. On a large setup that's hundreds of files, and the scan is supposed to be the cheap part of Loubrain.
+Two capabilities are on every roster regardless of the project, because both fail silently when missing: the **session memory** from Phase 0, and a **credit/token-efficiency** capability (anything that audits context-window usage, advises compaction, tracks token spend, or routes work between models by cost). Follow that second one during the build — compact at phase boundaries, keep context lean, push mechanical work to cheaper models. Loubrain's planning cost has to be earned back.
 
-For each capability, count real candidates (skills and agents that actually exist — never invent names):
+### 2a. What the user already owns comes first
 
-- **0 candidates** → it's a **gap**. Record for Phase 4.
-- **1 candidate** → use it. No election — a one-option decision doesn't need research or a subagent.
-- **2+ candidates competing for the same goal** → **the election fires.** This is the whole point of the skill: when a library holds several design skills, several testing skills, or multiple reviewer agents, only here is there a real choice worth researching.
+Installed skills win by default: they cost nothing, need no approval, and are already trusted. Only look outward once you are sure nothing installed fits.
 
-### When the library is small or empty
+Find candidates cheaply — never bulk-read the library:
 
-Loubrain still works with few or no installed skills — it just shifts weight. Don't treat a thin library as a failure or bury the user in install suggestions:
+1. The session's **available-skills** and **available-agents** lists, already in context for free.
+2. `ListSkills` / `SearchSkills` where available.
+3. Otherwise `Grep` skill frontmatter for capability keywords:
+   `Grep pattern:"react|frontend|design" path:"<skills-dir>" glob:"SKILL.md"` — resolve `<skills-dir>` as `$CLAUDE_CONFIG_DIR/skills` when that variable is set, else `~/.claude/skills`. Never assume `~/.claude`; a wrong path returns nothing, which looks exactly like "no candidates exist".
 
-- With **no candidates for most capabilities**, skip the election entirely, keep the brief short, and do the work with your own general abilities. Say plainly that the roster is mostly general-purpose.
-- Suggest installs **only** where a skill would clearly change the outcome, and cap it at the two or three that matter most. A first-time user who asked for a landing page does not want a ten-item shopping list before anything gets built.
-- The two always-on capabilities are the exception worth mentioning even on a bare setup, because their value grows with build length — but suggest, never insist, and never block the build on them.
+Match on **what a skill does**, read from its description — never on its name. Names vary wildly between setups.
 
-### The election (only for capabilities with 2+ candidates)
+Check invocability too: a skill marked `disable-model-invocation: true` cannot be called programmatically, so either elect an equivalent that can be, or adopt its method inline. Never put a skill on the roster you cannot actually run.
 
-Run it in ONE subagent pinned to a mid-tier model — set `model: sonnet` explicitly on the Agent call (don't run it inline on the main model, and don't let the subagent inherit the parent's model). Use the `sonnet` alias rather than a versioned model ID so this keeps working as models are released. Sonnet is more than capable of comparing short descriptions, and keeping the research off the top-tier model is what protects the credit budget. Use a `general-purpose` agent so it has web tools.
+### 2b. Only then, search outward for what is missing
 
-If web search isn't available in the environment, still run the election — score on the internal criteria alone, and say in the roster that the pick wasn't backed by external evidence. A comparison without web research still beats grabbing whichever skill triggered first.
+For any capability with no installed candidate, search the ecosystem — using the user's best installed discovery skill (`skill-scout` searches local, marketplace, GitHub and web; `find-skills` discovers installable skills), or `SearchPlugins` / `SuggestPluginInstall`, or direct research across GitHub, Reddit, and dev blogs.
 
-Hand the subagent the goal statement and, for each contested capability, the competing candidates with their descriptions. For each contest it must:
+Judge external candidates harder than installed ones — they are unvetted code from strangers. Prefer maintained, popular, clearly-scoped skills, and say where each came from.
 
-1. **Understand each candidate** — what approach/tool/style it actually represents (read the candidate's own `SKILL.md` or agent description; they differ in view and context, not just name).
-2. **Research externally** — WebSearch plus Reddit and dev-blog results for how each approach performs *for this kind of project*: which design style/library/testing approach is better regarded, more current, fewer footguns. This external evidence is what breaks the tie — not just the internal description.
-3. **Score each candidate 1-5** on: *goal match* (serves this project's goal directly), *specificity* (specific beats generic for the stack), *coverage* (how much it handles alone), and *external verdict* (what the web/Reddit evidence favors).
+### 2c. Elect when several compete
 
-Highest total wins — one winner per capability, runner-up and the deciding reason noted in one line (cite the evidence, e.g. "Reddit + docs favor shadcn approach for this stack"). Tie → the more specific candidate wins. The subagent returns the winners; the main model takes them into Phase 3 unchanged.
+Per capability, count real candidates — only ones that actually exist, never invented names:
 
-If **no** capability has 2+ candidates, skip the subagent entirely — assemble the roster from the lone picks and go straight to Phase 3.
+- **0** → a **gap**; carry it to the roster as a suggestion.
+- **1** → use it. No election; a one-option decision needs no research.
+- **2+** → **elect.** This is the point of Loubrain: when four design skills or three testing skills overlap, something has to choose deliberately.
 
-Never put two skills (or two agents) on the roster for the same capability — overlapping winners give conflicting instructions mid-build.
+Run the election in ONE subagent pinned to a mid-tier model — set `model: sonnet` explicitly on the Agent call, using the alias rather than a versioned ID so it survives model releases. Don't run it inline on the main model, and don't let the subagent inherit the parent's. Use a `general-purpose` agent so it has web tools. For each contest it must:
 
-## Phase 3 — Roster + green light
+1. **Read what each candidate actually does** — its own `SKILL.md` or agent description.
+2. **Check external evidence** — web search plus Reddit and dev-blog signal on which approach is better regarded and more current *for this kind of work*.
+3. **Score 1-5** on: *goal match*, *specificity* to this stack, *coverage* alone, and *external verdict*.
 
-Show the user the kickoff brief and **wait for approval before building**:
+Highest total wins; ties go to the more specific candidate. One winner per capability — never two, which would give conflicting instructions mid-build. Note the runner-up and the deciding evidence in one line each.
+
+If web search is unavailable, still elect on the internal criteria and say the pick had no external backing. If no capability has 2+ candidates, skip the subagent entirely.
+
+### When the library is thin
+
+Loubrain works with few or no installed skills — it just shifts weight. Skip the election, keep the brief short, build with your own general abilities, and cap suggestions at the two or three that would genuinely change the outcome. A first-time user asking for a landing page does not want a shopping list before anything gets built.
+
+## Phase 3 — One roster, then wait
+
+Show the user a single brief and **stop**. Nothing is installed and nothing is built before they answer.
 
 ```
-## Kickoff: <project name>
+## Kickoff: <project>
 **Goal:** <1-2 sentences>
 
-| Capability | Elected skill | Elected agent | Why (evidence if elected) |
-|---|---|---|---|
-| Session memory | ...      | ... or —      | one line |
-| Credit efficiency | ...   | ... or —      | one line |
-| <project capability> | ...| ... or —      | one line |
+| Capability | Using | Why |
+|---|---|---|
+| Session memory | ... | one line |
+| Credit efficiency | ... | one line |
+| <capability> | ... | one line (cite evidence where elected) |
 
-**Gaps:** <list or "none">
-**Suggested to install:** <from Phase 4, or "none">
+**Not installed — worth adding:** <name — what it improves — where it comes from>, or "none"
 ```
 
-List the two always-on capabilities (session memory, credit efficiency) first — they apply to the whole build, so they belong above the project-specific rows.
+Every entry must actually exist. Separate clearly what is **already installed** (ready to go) from what would need **installing** (needs their permission, comes from outside).
 
-Every skill and agent in the roster must actually exist in the installed library. End with a clear ask: "Green light to build with this roster?" Do not start Phase 5 until the user says yes — they may swap a pick or drop a capability first.
+End with a direct ask: *"Green light to build with this?"* Then wait. The user may swap a pick, drop a capability, or decline an install — all fine. **Never install anything without an explicit yes**, and if they decline, cover that capability with general abilities and say so.
 
-## Phase 4 — Gap suggestions
+## Phase 4 — Build (only after the green light)
 
-Only when Phase 2 found gaps:
+Once approved, build — and **invoke the roster yourself**. The approved roster is the authorization: the user already decided in Phase 3, so never wait for them to type `/skill-name`, never ask "should I use X now?" for something already approved, and never quietly skip an approved pick to work freehand because invoking it felt like ceremony.
 
-- Research (web search) which installable skill or plugin best covers each gap. Same election mindset: compare 2-3 real options, pick the best, say why in one line.
-- Suggest to the user: skill name, where to get it (repo/marketplace), what it improves.
-- Never install without the user's OK. If declined, cover the gap with general abilities and say so in the brief.
+Announce each step in plain language as Loubrain, not as a tool handoff.
 
-## Phase 5 — Build (only after green light)
-
-Once the user approves the roster, start building.
-
-**Invoke the elected skills yourself — the user never types anything.** When you reach a capability's part of the work, call its elected skill directly with the Skill tool, and hand off to its elected agent where one was chosen. The roster *is* the authorization: the user already approved these picks in Phase 3, so there is nothing left to ask and nothing left for them to trigger. Concretely, never:
-
-- wait for the user to type `/skill-name` or say a magic word before an elected skill is used,
-- tell the user to invoke a skill themselves, or ask "should I use X now?" for a skill already on the approved roster,
-- quietly skip an elected skill and do the work freehand because invoking it felt like extra ceremony.
-
-The whole point of the election is that the decision is already made — Phase 5 is execution. Announce which skill you're using for the current step in a few words so the user can follow along, then use it.
-
-**Put the two always-on picks to work.** They're the easiest to forget, because no single step "belongs" to them:
-
-- **Session memory** — persist the goal, the approved roster, and each significant decision as you go, not just at the end. The point is that a compaction or a new session mid-build doesn't lose the plan. Recall from it before starting a phase whose context may have been compacted away.
-- **Credit efficiency** — follow its guidance at phase boundaries rather than treating it as advice-only: compact when a phase closes, keep only what the next phase needs in context, and push mechanical work (scans, comparisons, bulk edits) to cheaper models or subagents. Loubrain's planning cost has to be earned back over the build.
-
-Don't silently drop roster picks — if one proves a bad fit mid-build, say so and name the replacement.
+Keep the two always-on capabilities working throughout — memory persisting decisions as they happen, the cost capability applied at phase boundaries. If a pick turns out to be a bad fit mid-build, say so and name the replacement rather than dropping it silently.

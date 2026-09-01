@@ -7,6 +7,37 @@ All notable changes to Loubrain are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Phase 0 — recall before spending.** Loubrain now searches the user's
+  session-memory capability before asking anything, so a project already
+  scoped in an earlier session is not re-interviewed from scratch. It writes
+  the goal, plan, and each decision back as it goes.
+- **A real interview, not a form dump.** Phase 1 adopts the relentless
+  question-at-a-time method (walk the decision tree, recommend an answer for
+  each, look up facts rather than asking, don't act until there is shared
+  understanding), delegating to the user's questioning skill where one exists.
+- **Owned skills take priority.** Phase 2 now searches what the user already
+  has *first* -- installed tools cost nothing, need no approval and are
+  already trusted -- and only searches GitHub/Reddit/blogs for genuine gaps,
+  judging external candidates harder as unvetted third-party code.
+- **Triggers in any language.** Intent is translated before it is judged
+  rather than pattern-matched against English. The hook matches build/change
+  verbs across Latin, Cyrillic, CJK, Devanagari and Arabic scripts, with
+  accented and unaccented spellings both covered.
+- **One voice.** Loubrain presents as a single process rather than narrating
+  which sub-skills it composes -- while still answering honestly if asked.
+- CI gates for multilingual triggering and adapter feature parity.
+
+### Fixed
+- **The hook could never fire on a non-English prompt.** It read stdin via
+  `[Console]::In`, which decodes using the console's ANSI codepage on Windows
+  PowerShell and corrupts every non-ASCII character before matching. Now reads
+  stdin as UTF-8 explicitly. This also broke accented Latin input ("creer"
+  with an accent, "olustur" with a cedilla).
+- Skills that cannot be invoked programmatically (`disable-model-invocation:
+  true`) are no longer eligible for the roster -- Loubrain would have planned
+  around a skill it could not actually call.
+
+### Added
 - **Downloadable `dist/loubrain.skill`** — a plain ZIP anyone can upload to
   claude.ai or Claude Code with no git and no terminal. `build-skill.mjs`
   rebuilds it with zero dependencies, and CI fails if the shipped package
