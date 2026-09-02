@@ -76,6 +76,31 @@
         "If no candidate exists for either, it is listed as a gap with an install suggestion rather than silently dropped",
         "Neither always-on pick is invented - both name real installed skills"
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "crea una aplicación web para gestionar las reservas de mi peluquería",
+      "expected_output": "Loubrain triggers on a Spanish build request with no English keyword present, and conducts the whole kickoff in Spanish.",
+      "files": [],
+      "assertions": [
+        "Loubrain runs even though the request contains no English trigger word",
+        "The interview questions are asked in Spanish, matching the user's language",
+        "The roster and the green-light request are also in Spanish",
+        "No code is written before the roster is approved"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "build me a browser extension that blocks distracting sites",
+      "expected_output": "A capability with no installed candidate is surfaced as a suggestion with its source, and nothing is installed until the user says yes.",
+      "files": [],
+      "assertions": [
+        "Installed skills are checked before any external search happens",
+        "Any capability with no installed candidate is listed as a suggestion, not silently skipped",
+        "Each suggested external skill names where it comes from",
+        "Nothing is installed before the user gives an explicit yes",
+        "The roster separates already-installed picks from ones that would need installing"
+      ]
     }
   ]
 }

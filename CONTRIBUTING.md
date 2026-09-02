@@ -16,22 +16,61 @@ Thanks for helping improve Loubrain! It's a small project, so the process is lig
 4. Run the checks CI runs (see below).
 5. Open a PR describing what changed and why.
 
+## Three constraints that fail silently
+
+Each of these has already shipped as a bug once. All are enforced in CI, but
+knowing them saves a round trip.
+
+**1. `description` must be at most 1024 characters.** Claude’s importer rejects
+the whole skill otherwise, and the error only appears at upload time — every
+local check passes. Trigger keywords are what make the skill fire, so compress
+the mechanism explanation, never the vocabulary.
+
+**2. Frontmatter values cannot contain an unquoted `": "`.** YAML reads a
+colon-space in a plain scalar as a nested mapping, and the skill silently fails
+to load. Use a sentence break or an em dash instead.
+
+**3. The hook must stay ASCII-only, and must read stdin as UTF-8.** Windows
+PowerShell 5.1 reads `.ps1` as ANSI, so non-ASCII *source* gets mangled — write
+non-Latin patterns as `\uXXXX` escapes. Separately, `[Console]::In` decodes
+stdin with the ANSI codepage, which corrupts non-English *prompts* before they
+can match; the hook opens stdin as UTF-8 explicitly for that reason. Don’t
+"simplify" either one away.
+
 ## Local checks
 
 ```bash
-# SKILL.md has valid YAML frontmatter with name + description
-# evals.json is valid JSON
-python -c "import json,sys; json.load(open('skills/loubrain/evals/evals.json'))"
+python -c "import json; json.load(open('skills/loubrain/evals/evals.json'))"
 ```
 
-The PowerShell hook must stay **ASCII-only** — Windows PowerShell 5.1 reads `.ps1`
-as ANSI and mangles smart quotes / em dashes, which breaks parsing. Test it:
+```bash
+node build-skill.mjs
+```
+
+The build must be reproducible — commit the rebuilt `.skill`.
+
+Then check the hook fires and stays quiet in the right places:
 
 ```bash
 echo '{"prompt":"build me a react app"}' | pwsh -NoProfile -File hooks/loubrain-nudge.ps1
 ```
 
-It should emit one line of JSON. A non-build prompt should emit nothing.
+That should emit one line of JSON. A trivial edit ("rename the variable foo to
+bar") must emit nothing, and a non-English build request ("crea una app web")
+must emit JSON.
+
+## Keeping the four descriptions in sync
+
+The logic lives in [`docs/PROTOCOL.md`](docs/PROTOCOL.md) and is adapted into
+four files: `skills/loubrain/SKILL.md` (Claude Code), `AGENTS.md` (Codex),
+`GEMINI.md` (Gemini CLI), and `.cursor/rules/loubrain.mdc` (Cursor). A behavior
+change belongs in all of them — CI fails if one drifts. An adapter that quietly
+loses a behavior is worse than no adapter: the user believes Loubrain is running
+and gets a different process.
+
+The three non-Claude adapters must never name a Claude-specific tool
+(`AskUserQuestion`, `Skill`, `ToolSearch`), since they run on hosts that have no
+such thing.
 
 ## Reporting bugs / ideas
 
