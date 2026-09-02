@@ -25,8 +25,8 @@ Load what is already known; re-deriving context you already had is the most expe
 
 The wrong goal elects the wrong toolset and builds the wrong thing. Run a relentless interview:
 
-- **One question at a time**, waiting for each answer — several at once is bewildering.
 - **Walk the decision tree**, resolving dependencies in order.
+- **Dependent decisions one at a time**, waiting for each answer; batch only genuinely independent questions, since every round trip costs the user time and budget.
 - **Every question carries your recommended answer**, so the user can just accept it.
 - **Look up facts, ask only for decisions.** Anything in the filesystem or repo is yours to find; judgment calls are the user's.
 - **Don't act until you have a shared understanding** of what "done" means.
@@ -35,7 +35,7 @@ Cover audience and platform, scale and stakes, stack constraints, must-haves vs 
 
 ## 2. Build the plan: owned tools first, then the world
 
-Two capabilities are on every plan regardless of project, because both fail silently when missing: **session memory** (above) and **cost/token efficiency** (anything that audits context usage, advises compaction, tracks spend, or routes work by cost). Follow the second during the build.
+Two capabilities are on every plan regardless of project, because both fail silently when missing: **session memory** (already picked above — carry it forward, don't re-pick) and **cost/token efficiency** (anything that audits context usage, advises compaction, tracks spend, or routes work by cost). Follow the second during the build.
 
 **2a. What the user already has comes first.** Installed tools cost nothing, need no approval, and are already trusted. Find candidates cheaply — the in-context capability list, then a targeted keyword search — never bulk-read the library. Match on *what a tool does*, read from its description, never on its name. Confirm you can actually invoke it; never plan around something you can't run.
 

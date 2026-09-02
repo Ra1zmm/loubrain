@@ -6,6 +6,28 @@ All notable changes to Loubrain are documented here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Phase 0 was unrunnable as written.** It told the model to "elect" the
+  session-memory capability, but electing is defined in Phase 2 and depends on
+  the inventory in Phase 2a - so the very first phase required work from a
+  phase two steps later. Phase 0 now does a cheap direct lookup, and the
+  considered election is reserved for capabilities where the choice actually
+  depends on the goal.
+- **Memory was elected twice.** Phase 2 re-elected what Phase 0 had already
+  picked. Phase 2 now carries the Phase 0 pick forward.
+- **Phase 1 contradicted itself on batching.** It said "one question at a time"
+  while pointing at a tool that takes four per call, leaving the model to guess
+  - and one call per question is a round trip each, which fights the skill's
+  own cost discipline. The rule is now dependency-based: dependent decisions
+  one at a time, genuinely independent ones batched.
+- **The roster template had lost its agent column** while Phase 2 still elected
+  agents, so an elected agent had nowhere to appear.
+- Phase numbering was inconsistent across three documents (SKILL.md 0-4,
+  README "six phases", how-it-works "five phases" with stale 1-5 names and no
+  Phase 0 at all). All now describe the same five phases, 0 through 4.
+- how-it-works.md no longer names one machine's installed skills as the
+  expected candidates for the always-on capabilities.
+
 ### Added
 - **Phase 0 — recall before spending.** Loubrain now searches the user's
   session-memory capability before asking anything, so a project already

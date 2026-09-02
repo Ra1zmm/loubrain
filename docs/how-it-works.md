@@ -15,15 +15,28 @@ The one exception is a genuinely trivial, contained edit: a typo, one variable r
 
 For change work rather than a new project, the phases below read "the project" as "the change", and Phase 1's questions scope to what the change should achieve instead of re-interviewing you about a codebase that already exists.
 
-## The five phases
+## The phases (0 through 4)
 
-### 1. Goal
+Loubrain runs Phase 0 through Phase 4. Phases 0 and 1 cost almost nothing; the expensive research only happens in Phase 2, and only when it has to.
 
-The whole thing only works if the goal is right — the wrong goal elects the wrong toolset and builds the wrong thing. So Loubrain asks as many questions as it takes to pin the goal, but every question must move the *final goal* forward (never filler).
+### 0. Recall
 
-Each question ships with a **recommended default** as its first option, marked `(Recommended)`, so you can accept the sensible choice instead of deciding from scratch. Anything safely inferable is stated as a one-line assumption instead of asked.
+Before asking anything, Loubrain picks your session-memory capability with a quick scan of what's installed — no research, since the best memory skill doesn't depend on what you're building — and searches it for this project or a related past session.
 
-### 2. Election
+Anything a previous session already settled (the goal, the decisions, the roster) is carried forward rather than re-asked. It keeps writing back to that memory for the rest of the run, so a compaction mid-build doesn't lose the plan. With no memory skill installed, it falls back to a project file (`NOTES.md`, `PLAN.md`) a later session can pick up.
+
+### 1. Interview
+
+The wrong goal elects the wrong toolset and builds the wrong thing, so this phase decides everything downstream. Loubrain runs a real interview rather than a form dump:
+
+- It **walks the decision tree**, resolving dependencies in order — each answer determines what's worth asking next.
+- **Dependent decisions come one at a time**; genuinely independent ones are batched into a single prompt, because a round trip costs you both time and credits.
+- **Every question carries a recommended answer**, marked `(Recommended)` and placed first, so you can just accept it.
+- **Facts are looked up, not asked.** Anything discoverable in the repo or filesystem is Loubrain's job to find; only the judgment calls are yours.
+
+It scales to the job — a one-file script may need a single question, a production app earns a real interview. Anything safely inferable is stated as a one-line assumption instead of asked.
+
+### 2. Toolset and election
 
 #### Two capabilities are always on the roster
 
@@ -31,12 +44,12 @@ Whatever the project is, every roster includes these two. They aren't project-sp
 
 | Always-on capability | Why | Typical candidates |
 |---|---|---|
-| **Session memory** | Long builds outlive a context window. Without it, the goal, the approved roster, and the reasoning behind decisions are lost at the first compaction, and the build drifts from the plan you approved. | `claude-mem` plugin skills, `graphify`, `knowledge-ops`, `continuous-learning-v2` |
-| **Credit efficiency** | Loubrain adds an upfront planning cost, so it has to earn that back across the build. | `context-budget`, `strategic-compact`, `token-budget-advisor`, `cost-aware-llm-pipeline` |
+| **Session memory** | Long builds outlive a context window. Without it, the goal, the approved roster, and the reasoning behind decisions are lost at the first compaction, and the build drifts from the plan you approved. | a memory plugin, a knowledge-graph or knowledge-base skill, a session-notes or learning skill |
+| **Credit efficiency** | Loubrain adds an upfront planning cost, so it has to earn that back across the build. | anything auditing context-window usage, advising compaction, tracking token spend, or routing work by cost |
 
-Both are **elected from what you actually have installed** — nothing is hardcoded, so this works on any setup. If you have no candidate for one, it's a gap and Phase 4 suggests one; a missing memory layer is among the most expensive gaps a long build can have.
+Both are matched by **what a skill does**, read from its description — never by name, since names vary wildly between setups. Neither needs the full election: the best memory or cost skill doesn't depend on what you're building, so Loubrain takes the obvious one and moves on. If you have no candidate for one, it's a gap; a missing memory layer is among the most expensive a long build can have.
 
-Memory is used at both ends: Loubrain searches it *before* the Phase 1 questions (so it doesn't re-ask what a past session already established) and writes the goal, roster, and key decisions once the roster is approved.
+Memory is used at both ends: searched in Phase 0 *before* any question, and written back as the goal, roster, and decisions land.
 
 #### The project's own capabilities
 
@@ -63,28 +76,27 @@ The election runs in **one Claude Sonnet subagent** (`model: sonnet`), because r
 
 Highest total wins — one winner per capability, with the deciding evidence noted in a line. If no capability has 2+ candidates, the subagent never spawns.
 
-### 3. Roster
+### 3. Roster, then a hard stop
 
-Loubrain shows a brief and **waits for your approval**:
+Loubrain shows one brief and **waits for your approval**:
 
 ```
 ## Kickoff: <project>
 **Goal:** <1-2 sentences>
 
-| Capability | Elected skill | Elected agent | Why (evidence if elected) |
+| Capability | Skill | Agent | Why (evidence if elected) |
 |---|---|---|---|
 
-**Gaps:** <list or "none">
-**Suggested to install:** <from Phase 4, or "none">
+**Not installed — worth adding:** <name — what it improves — where it comes from>, or "none"
 ```
 
-Every skill and agent listed actually exists in your library. Nothing is built until you say go — you can swap a pick or drop a capability first.
+Every skill and agent listed actually exists. What's **already installed** is separated from what would need **installing**, since the second kind needs your permission and comes from outside.
 
-### 4. Gaps
+For any capability with no candidate, Loubrain researches the best installable option, compares a couple of real ones, and suggests it with a source and a one-line reason.
 
-For any capability with no candidate, Loubrain researches the best installable skill or plugin, compares a couple of real options, and suggests one — with a source and a one-line reason. It never installs without your OK.
+Nothing is installed and nothing is built until you answer. You can swap a pick, drop a capability, or decline an install — **it never installs anything without an explicit yes**.
 
-### 5. Build
+### 4. Build
 
 After the green light, Loubrain builds — invoking each capability's elected skill itself and handing off to its elected agent.
 

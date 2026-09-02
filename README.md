@@ -29,12 +29,12 @@ You: "refactor this codebase to use server components"
      (or "refactorise ce projet", "重构这个项目", "refactoriza este proyecto")
 
 Loubrain:
-  0. Recalls            → loads goal + decisions from past sessions, so nothing is re-asked
-  1. Interviews you     → one question at a time, each with a recommended default
-  2. Picks the toolset  → what you already own first; the web only for real gaps
-  3. Elects             → when several tools overlap, one wins on evidence
-  4. Shows ONE plan     → installed vs. worth-installing, clearly separated
-  5. Waits for go       → nothing installed, nothing built, until you say yes
+  0. Recalls          → loads goal + decisions from past sessions, so nothing is re-asked
+  1. Interviews you   → each question carries its recommended answer
+  2. Picks the tools  → what you already own first, the web only for real gaps,
+                        and an election when several overlap
+  3. Shows ONE plan   → installed vs. worth-installing, then STOPS
+  4. Builds           → only after your green light
 ```
 
 ## When it fires
@@ -53,7 +53,7 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 
 ## Features
 
-- **🎯 Goal-first, one question at a time.** Runs a real interview rather than a form dump — each question in turn, each carrying a recommended answer so you can just accept it, and facts looked up rather than asked. Scales to the job: a one-file script gets one question, a production app earns a proper interview.
+- **🎯 Goal-first, a real interview.** Not a form dump: it walks the decision tree, asking dependent decisions one at a time and batching only the genuinely independent ones, so you aren't charged a round trip per question. Each carries a recommended answer you can just accept, and facts are looked up rather than asked. Scales to the job — a one-file script gets one question, a production app earns a proper interview.
 - **🌍 Any language.** Triggers on *crea*, *créer*, *erstelle*, *cria*, *создай*, *创建*, *作成*, *만들어*, *बनाओ*, *أنشئ*, *oluştur*, *buat* — and replies in your language. Intent is translated before it's judged, never pattern-matched against English.
 - **🗳️ Skill elections.** When 4–5 skills compete for the same job, Loubrain spins up a **Claude Sonnet** subagent that reads each candidate, researches the approaches on the web + Reddit/dev blogs, and scores them on goal-match, specificity, coverage, and external verdict. One winner per capability.
 - **🤖 Agents too.** Reviewers, resolvers, and other subagents are elected the same way — not left to chance.
@@ -69,16 +69,15 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 
 ## How it works
 
-Loubrain runs in six phases. Full detail in [docs/how-it-works.md](docs/how-it-works.md).
+Loubrain runs in five phases (0 through 4). Full detail in [docs/how-it-works.md](docs/how-it-works.md).
 
 | Phase | What happens | Model |
 |-------|--------------|-------|
 | **0. Recall** | Search your memory skill for what past sessions already established | main |
-| **1. Interview** | One question at a time, each with a recommended answer; facts looked up, not asked | main |
-| **2. Toolset** | Inventory what you own first; search GitHub/Reddit/blogs only for genuine gaps | main |
-| **3. Election** | When 2+ tools compete for one job, a web-researched Sonnet subagent picks the winner | Sonnet subagent |
-| **4. Plan + gate** | Show one plan — installed vs. worth-installing — then **stop and wait** | main |
-| **5. Build** | After the green light, invoke each pick directly — no keyword from you | main |
+| **1. Interview** | Dependent decisions one at a time, independent ones batched; each with a recommended answer | main |
+| **2. Toolset** | Inventory what you own first, search the web only for genuine gaps, and elect when 2+ compete | main + Sonnet subagent |
+| **3. Roster** | Show one plan — installed vs. worth-installing — then **stop and wait** | main |
+| **4. Build** | After the green light, invoke each pick directly — no keyword from you | main |
 
 ## Compatibility
 
@@ -93,7 +92,7 @@ Loubrain's logic is written once, tool-agnostically, in [docs/PROTOCOL.md](docs/
 
 **Claude Code** gets the richest version: a real skill/agent election via a pinned Sonnet subagent, `AskUserQuestion` prompts, plus the `CLAUDE.md` override rule and `UserPromptSubmit` hook that the installer wires up.
 
-Each of the other three loads instructions from that tool's own documented convention — Codex walks from the git root down, concatenating `AGENTS.md` files (deeper files win); Gemini reads `~/.gemini/GEMINI.md` first then the project hierarchy; Cursor loads every `.mdc` in `.cursor/rules/` with `alwaysApply: true` on every request. The adapted files describe the same five phases but never name a Claude-specific tool — they lean on whatever equivalent the host provides.
+Each of the other three loads instructions from that tool's own documented convention — Codex walks from the git root down, concatenating `AGENTS.md` files (deeper files win); Gemini reads `~/.gemini/GEMINI.md` first then the project hierarchy; Cursor loads every `.mdc` in `.cursor/rules/` with `alwaysApply: true` on every request. The adapted files describe the same phases but never name a Claude-specific tool — they lean on whatever equivalent the host provides.
 
 If you use an assistant not listed here, [docs/PROTOCOL.md](docs/PROTOCOL.md) has everything needed to write a new adapter — PRs welcome.
 
@@ -122,7 +121,7 @@ No terminal, no git. Works on **claude.ai** and in **Claude Code**.
    - **Claude Code** → drop the file in, or place the unzipped `loubrain/` folder in your skills directory
 3. That's it. Loubrain now runs automatically on build and change requests.
 
-> The uploaded skill gives you all five phases. The optional installer below adds two *enforcement* extras that a plain upload can't: the global `CLAUDE.md` override rule and the `UserPromptSubmit` hook. The skill works without them — they just make it harder for Claude to forget.
+> The uploaded skill gives you the full process. The optional installer below adds two *enforcement* extras that a plain upload can't: the global `CLAUDE.md` override rule and the `UserPromptSubmit` hook. The skill works without them — they just make it harder for Claude to forget.
 
 To rebuild the package after editing the skill:
 

@@ -46,10 +46,13 @@ internals out of routine narration, but answer honestly if asked directly.
 Load what is already known. Re-deriving context you already had is the single
 most expensive habit there is.
 
-Elect the user's **session-memory** capability — anything that persists
-knowledge across sessions (a memory plugin, a knowledge-graph or knowledge-base
-tool, a session-notes or learning skill). Search it for this project or a
-related past session and carry forward the goal, decisions, and plan it holds.
+Pick the user's **session-memory** capability now, with a quick look rather
+than the considered election below — anything that persists knowledge across
+sessions (a memory plugin, a knowledge-graph or knowledge-base tool, a
+session-notes or learning skill). Take the obvious one; the best memory tool
+does not depend on what is being built, so there is nothing to research yet.
+Search it for this project or a related past session and carry forward the
+goal, decisions, and plan it holds.
 Keep writing to it for the rest of the run, so a compaction or a new session
 does not lose the plan.
 
@@ -62,10 +65,12 @@ The wrong goal elects the wrong toolset and builds the wrong thing, so this
 phase decides everything downstream. Run a relentless interview, using the
 user's best questioning capability if they have one. The method:
 
-- **One question at a time**, waiting for the answer before the next. Several
-  at once is bewildering.
 - **Walk the decision tree**, resolving dependencies in order — each answer
   determines what is worth asking next.
+- **Ask dependent decisions one at a time**, waiting for each answer, since you
+  cannot sensibly frame the follow-up until you have it. Genuinely independent
+  questions can go together in one prompt — a round trip costs the user time
+  and budget. The rule is dependency, not ceremony.
 - **Every question carries your recommended answer**, so the user can simply
   accept it. Where the interface supports options, put the recommendation first
   and mark it as recommended.
@@ -91,8 +96,9 @@ deployment, docs…), pick the single best tool and, where relevant, the best
 sub-agent.
 
 Two capabilities are on every plan regardless of the project, because both fail
-silently when missing: the **session memory** from Phase 0, and a **cost/token
-efficiency** capability (anything that audits context usage, advises
+silently when missing: the **session memory** already picked in Phase 0 (carry
+that pick forward, do not re-elect it), and a **cost/token efficiency**
+capability (anything that audits context usage, advises
 compaction, tracks spend, or routes work between models by cost). Follow the
 second during the build — compact at phase boundaries, keep context lean, push
 mechanical work to cheaper models. This protocol's planning cost has to be

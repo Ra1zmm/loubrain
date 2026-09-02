@@ -34,7 +34,9 @@ This is about presentation, not concealment: keep the internals out of routine n
 
 Start by loading what is already known. A build that re-derives context it already had is the single most expensive habit there is.
 
-Elect the user's **session-memory** capability — anything that persists knowledge across sessions (a memory plugin such as `claude-mem`, a knowledge-graph or knowledge-base skill, a session-notes or learning skill). Search it for this project or a related past session, and carry forward the goal, decisions, and roster it already holds.
+Pick the user's **session-memory** capability now, with a quick look — not the full election below. Scan the available-skills list already in context for anything that persists knowledge across sessions: a memory plugin, a knowledge-graph or knowledge-base skill, a session-notes or learning skill. Take the obvious one; if two look equally good, take either and move on. This is a cheap lookup because it runs before you know what the project needs — the considered election in Phase 2 is for capabilities where the choice actually depends on the goal.
+
+Search it for this project or a related past session, and carry forward the goal, decisions, and roster it already holds.
 
 Then keep using it for the rest of the run: persist the goal and roster once approved, and each significant decision as it happens, so a compaction or a new session does not lose the plan.
 
@@ -46,9 +48,9 @@ The wrong goal elects the wrong toolset and builds the wrong thing, so this phas
 
 Run a **relentless interview**, using the user's best installed questioning skill for it — `grilling` if present (note: `grill-me` is user-invocable only, so call `grilling`). Follow that skill's own cadence. Its method, which Loubrain adopts wherever it isn't installed:
 
-- **One question at a time**, waiting for the answer before the next. Several at once is bewildering.
 - **Walk the decision tree**, resolving dependencies in order — each answer determines what is worth asking next.
-- **Every question carries your recommended answer**, so the user can simply accept it. Where the interface supports options (`AskUserQuestion`), put the recommendation first and mark it `(Recommended)`.
+- **Ask dependent decisions one at a time**, waiting for the answer before the next, because you cannot sensibly ask the follow-up until you know the first answer. Questions that are genuinely independent of each other can go together in a single `AskUserQuestion` call (it takes up to 4) — that is one round trip instead of four, and round trips cost the user both time and credits. The rule is dependency, not ceremony: never batch a question whose *options* depend on another answer in the same batch.
+- **Every question carries your recommended answer**, so the user can simply accept it. In `AskUserQuestion`, put the recommendation first and mark it `(Recommended)`. Without that tool, ask in plain text and state your recommendation inline.
 - **Look up facts, ask only for decisions.** Anything discoverable from the filesystem, the repo, or a tool is yours to find. The judgment calls are the user's.
 - **Do not act until you have a shared understanding** of what "done" looks like.
 
@@ -60,7 +62,12 @@ Cover what would change the build or the toolset: audience and platform, scale a
 
 For every capability the work needs — frontend/design, API, database, testing, deployment, docs, and so on — pick the single best **skill** and, where relevant, the best **agent**.
 
-Two capabilities are on every roster regardless of the project, because both fail silently when missing: the **session memory** from Phase 0, and a **credit/token-efficiency** capability (anything that audits context-window usage, advises compaction, tracks token spend, or routes work between models by cost). Follow that second one during the build — compact at phase boundaries, keep context lean, push mechanical work to cheaper models. Loubrain's planning cost has to be earned back.
+Two capabilities are on every roster regardless of the project, because both fail silently when missing:
+
+- **Session memory** — already chosen in Phase 0. Carry that pick straight onto the roster; do not re-elect it.
+- **Credit/token efficiency** — anything that audits context-window usage, advises compaction, tracks token spend, or routes work between models by cost. Pick it the same cheap way, since it also doesn't depend on the goal. Follow it during the build: compact at phase boundaries, keep context lean, push mechanical work to cheaper models. Loubrain's planning cost has to be earned back.
+
+Neither needs the full election — the goal doesn't change which memory or cost skill is best. Everything below is for the capabilities where it does.
 
 ### 2a. What the user already owns comes first
 
@@ -113,11 +120,11 @@ Show the user a single brief and **stop**. Nothing is installed and nothing is b
 ## Kickoff: <project>
 **Goal:** <1-2 sentences>
 
-| Capability | Using | Why |
-|---|---|---|
-| Session memory | ... | one line |
-| Credit efficiency | ... | one line |
-| <capability> | ... | one line (cite evidence where elected) |
+| Capability | Skill | Agent | Why |
+|---|---|---|---|
+| Session memory | ... | — | one line |
+| Credit efficiency | ... | — | one line |
+| <capability> | ... | ... or — | one line (cite evidence where elected) |
 
 **Not installed — worth adding:** <name — what it improves — where it comes from>, or "none"
 ```
