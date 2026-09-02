@@ -131,19 +131,25 @@ jobs:
       - name: hook triggers in non-English languages
         shell: pwsh
         run: |
-          # The hook must read stdin as UTF-8. [Console]::In decodes with the
-          # ANSI codepage on Windows PowerShell, which corrupts every non-ASCII
-          # character and silently kills every non-English trigger.
+          # Loubrain fires on intent in any language, so a non-English build
+          # request must trigger exactly like an English one. Written as literal
+          # UTF-8: this workflow runs on Linux under pwsh 7, which is UTF-8
+          # native. (The ASCII-only rule applies to the .ps1 hook itself, which
+          # Windows PowerShell 5.1 would otherwise read as ANSI - a different
+          # problem with a different fix.)
           $multilingual = @(
             'crea una aplicacion de tareas con React',
-            'creer un site web pour mon restaurant',
+            'créer un site web pour mon restaurant',
             'erstelle eine App fuer meine Firma',
             'cria um site para minha loja',
-            [char]0x0441 + [char]0x043e + [char]0x0437 + [char]0x0434 + 'ai prilozhenie',
-            [char]0x521b + [char]0x5efa + 'todo',
-            [char]0x4f5c + [char]0x6210 + 'app',
-            [char]0x092c + [char]0x0928 + [char]0x093e + ' website',
-            [char]0x0623 + [char]0x0646 + [char]0x0634 + [char]0x0626 + ' site',
+            'создай приложение для заметок',
+            '创建一个待办事项网站',
+            '重构这个项目',
+            '作成してくださいTodoアプリ',
+            '만들어줘 웹사이트',
+            'एक वेबसाइट बनाओ',
+            'أنشئ لي موقع ويب',
+            'oluştur bir web sitesi',
             'buat aplikasi todo'
           )
           $failed = 0
@@ -232,7 +238,7 @@ jobs:
             exit 1
           fi
           # Entry names must use forward slashes or the archive breaks on macOS/Linux
-          if unzip -l dist/loubrain.skill | grep -q '\\'; then
+          if unzip -l dist/loubrain.skill | grep -qF '\'; then
             echo "::error::.skill contains backslash paths; rebuild with build-skill.mjs"
             exit 1
           fi
