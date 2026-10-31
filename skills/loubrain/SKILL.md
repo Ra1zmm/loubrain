@@ -46,7 +46,7 @@ If the user has no memory skill, note it as a gap and fall back to a file in the
 
 Stale tools are a silent tax: an out-of-date skill holds last quarter's API, its old advice, and bugs already fixed upstream. So refresh what's installed before electing anything from it.
 
-Run `npx skills update` once at the start of the run. Then record that it ran, and **skip it entirely if it has already run in the last 24 hours** — a network round trip in front of every request is exactly the kind of overhead Loubrain is supposed to remove. A marker file in the config directory (`<config>/.loubrain-updated`) is enough: check its modification time first, touch it after.
+Run `npx skills update` at the start of **every** run. Not once a day, not once a session — every time Loubrain fires, before any capability is elected. The cost of a refresh is a few seconds; the cost of building on a stale tool is wrong code that looks right.
 
 Three things to know before you rely on it:
 

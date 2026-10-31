@@ -66,9 +66,9 @@ API, its old advice, and bugs already fixed upstream. Refresh what is installed
 before electing anything from it, using whatever update mechanism the host
 provides for its skills, extensions or packages.
 
-Run it once at the start, record that it ran, and **skip it if it has already
-run in the last 24 hours** — a network round trip in front of every request is
-exactly the overhead this protocol exists to remove.
+Run it at the start of **every** run, before any capability is elected — not
+once a day, not once a session. A refresh costs seconds; building on a stale
+tool costs wrong code that looks right.
 
 Three constraints:
 

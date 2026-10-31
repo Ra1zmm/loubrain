@@ -29,7 +29,7 @@ Load what is already known; re-deriving context you already had is the most expe
 
 Stale tools carry last quarter's API and bugs already fixed upstream, so refresh what is installed before electing anything from it, using whatever update mechanism the host provides.
 
-Run it once at the start and **skip it if it already ran in the last 24 hours** — a network round trip before every request is the overhead this process exists to remove. Three constraints: a true preview may not exist (some update commands apply changes regardless of their name), updating is never installing (anything new still needs an explicit yes in the plan), and it must never block the work (note failures in one line and carry on).
+Run it at the start of **every** run, before any capability is elected — not once a day, not once a session. A refresh costs seconds; building on a stale tool costs wrong code that looks right. Three constraints: a true preview may not exist (some update commands apply changes regardless of their name), updating is never installing (anything new still needs an explicit yes in the plan), and it must never block the work (note failures in one line and carry on).
 
 ## 1. Interview until the goal is real
 

@@ -25,7 +25,7 @@ Before asking anything, Loubrain picks your session-memory capability with a qui
 
 Anything a previous session already settled (the goal, the decisions, the roster) is carried forward rather than re-asked. It keeps writing back to that memory for the rest of the run, so a compaction mid-build doesn't lose the plan. With no memory skill installed, it falls back to a project file (`NOTES.md`, `PLAN.md`) a later session can pick up.
 
-Loubrain also refreshes your installed skills here, by running the skill manager's update once and then skipping it for 24 hours. The reason is simple: an out-of-date skill carries last quarter's API, its old advice, and bugs already fixed upstream, and electing it is worse than electing nothing.
+Loubrain also refreshes your installed skills here, running the skill manager's update on **every** kickoff. The reason is simple: an out-of-date skill carries last quarter's API, its old advice, and bugs already fixed upstream, and electing it is worse than electing nothing. The refresh costs seconds; building on a stale tool costs wrong code that looks right.
 
 Two boundaries matter. **Updating is not installing** — this only refreshes tools you already chose; anything new still waits for the green light in Phase 3. And **it never blocks the build**: individual updates fail, the updater may be missing, the machine may be offline, and a stale tool is a far smaller problem than a kickoff that cannot start. You get one line about what updated, not a wall of package output.
 
