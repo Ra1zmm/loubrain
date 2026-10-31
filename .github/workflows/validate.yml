@@ -223,6 +223,8 @@ jobs:
           check "always-on cost efficiency"      "cost|credit|token"
           check "waits for approval"             "approval|green light"
           check "assistant invokes tools itself" "yourself|never types"
+          check "refreshes tools before electing" "update|refresh"
+          check "updating is not installing"      "not installing|never adds anything new|still needs an explicit yes"
           exit $fail
 
       - name: shipped .skill matches the source skill

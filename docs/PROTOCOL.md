@@ -59,6 +59,32 @@ does not lose the plan.
 With no memory tool available, note it as a gap and fall back to a file in the
 project (`NOTES.md`, `PLAN.md`) that a later session can pick up.
 
+### Keep the toolset current
+
+Stale tools are a silent tax: an out-of-date capability carries last quarter's
+API, its old advice, and bugs already fixed upstream. Refresh what is installed
+before electing anything from it, using whatever update mechanism the host
+provides for its skills, extensions or packages.
+
+Run it once at the start, record that it ran, and **skip it if it has already
+run in the last 24 hours** — a network round trip in front of every request is
+exactly the overhead this protocol exists to remove.
+
+Three constraints:
+
+- **A preview may not exist.** Some update commands apply changes despite a
+  name suggesting otherwise, so do not promise to check and then ask. Scope the
+  step to *updating what the user already installed* — things they have already
+  chosen and trusted.
+- **Updating is not installing.** This never adds anything new. A tool the user
+  does not have still goes through the plan and still needs an explicit yes.
+- **It must never block the work.** Individual updates fail, the updater may be
+  missing, the machine may be offline. Note it in one line and carry on; a
+  stale tool is a far smaller problem than a kickoff that cannot start.
+
+Report in one line — how many updated, anything that failed — not raw package
+output.
+
 ## Phase 1 — Interview until the goal is real
 
 The wrong goal elects the wrong toolset and builds the wrong thing, so this
@@ -120,9 +146,13 @@ some tools are user-invocable only. Never plan around something you cannot run.
 
 ### 2b. Only then, search outward for what is missing
 
-For any capability with no local candidate, search the ecosystem — a skill- or
-plugin-discovery capability if the user has one, otherwise direct research
-across GitHub, Reddit, and dev blogs.
+For any capability with no local candidate, reach first for a **purpose-built
+skill-discovery capability** if the user has one — it is built for exactly this
+question and usually returns provenance and popularity alongside the results,
+rather than leaving those to be chased down separately.
+
+Fall back to plugin search, or direct research across GitHub, Reddit, and dev
+blogs, only when that cannot answer. Say which route you used.
 
 Judge external candidates harder than installed ones: they are unvetted code
 from strangers. Prefer maintained, popular, clearly-scoped options, and say

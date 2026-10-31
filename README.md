@@ -29,7 +29,8 @@ You: "refactor this codebase to use server components"
      (or "refactorise ce projet", "重构这个项目", "refactoriza este proyecto")
 
 Loubrain:
-  0. Recalls          → loads goal + decisions from past sessions, so nothing is re-asked
+  0. Refreshes        → updates installed tools, then loads goal + decisions from
+                        past sessions, so nothing is re-asked
   1. Interviews you   → each question carries its recommended answer
   2. Picks the tools  → what you already own first, the web only for real gaps,
                         and an election when several overlap
@@ -57,11 +58,12 @@ The rule of thumb it follows: when a change is somewhere between trivial and sub
 - **🌍 Any language.** Triggers on *crea*, *créer*, *erstelle*, *cria*, *создай*, *创建*, *作成*, *만들어*, *बनाओ*, *أنشئ*, *oluştur*, *buat* — and replies in your language. Intent is translated before it's judged, never pattern-matched against English.
 - **🗳️ Skill elections.** When 4–5 skills compete for the same job, Loubrain spins up a **Claude Sonnet** subagent that reads each candidate, researches the approaches on the web + Reddit/dev blogs, and scores them on goal-match, specificity, coverage, and external verdict. One winner per capability.
 - **🤖 Agents too.** Reviewers, resolvers, and other subagents are elected the same way — not left to chance.
+- **🔄 Keeps your tools current.** Before electing anything, Loubrain updates your installed skills — once a day, never more — so it never picks a tool carrying last quarter's API and bugs already fixed upstream. Updating is strictly separate from installing: refreshing what you already trust is automatic, anything *new* still waits for your yes. A failed update or an offline machine never blocks the build.
 - **🧠 Remembers across sessions.** Before asking anything, Loubrain searches your memory skill for what past sessions already settled — so you're never re-interviewed about a project you already scoped. It then writes the goal, plan, and each decision back as it goes, so a compaction mid-build doesn't lose the thread.
 - **💾 Memory + cost always on.** Both are on every plan regardless of project, elected by *what a skill does* rather than by name, so it works on any setup.
 - **📦 Works with any library, including none.** Loubrain doesn't assume you have hundreds of skills installed. With a thin library it skips the election, keeps the brief short, builds with general abilities, and suggests at most two or three installs that would actually change the outcome — no shopping list before you get anything built.
 - **💸 Cost-aware.** The election (the expensive, research-heavy part) runs on Sonnet, not the main model, and only fires when a capability genuinely has 2+ rivals. Single-option jobs skip it entirely.
-- **🏠 What you own comes first.** Installed skills win by default — they cost nothing, need no approval, and are already trusted. Only when nothing installed fits does Loubrain search GitHub, Reddit, and dev blogs, and it judges those candidates harder because they're unvetted code from strangers.
+- **🏠 What you own comes first.** Installed skills win by default — they cost nothing, need no approval, and are already trusted. Only when nothing installed fits does Loubrain search outward, leading with a purpose-built skill-discovery skill (`find-skills`) so install counts and provenance come back with the results. It judges those candidates harder, because they're unvetted code from strangers.
 - **🔌 Gap suggestions.** Missing a capability? Loubrain finds the best installable option and suggests it — with its source — before you build. **Never installs anything without your explicit yes.**
 - **✋ Green-light gate.** Shows the full roster and stops. You approve, swap, or drop picks before anything is built.
 - **⚡ Always first, no keyword.** A global `CLAUDE.md` rule plus a `UserPromptSubmit` hook make it the mandatory first step on any build *or* change request. It fires on intent — you never name it, and waiting to be asked counts as a failure to run.
@@ -73,7 +75,7 @@ Loubrain runs in five phases (0 through 4). Full detail in [docs/how-it-works.md
 
 | Phase | What happens | Model |
 |-------|--------------|-------|
-| **0. Recall** | Search your memory skill for what past sessions already established | main |
+| **0. Refresh + recall** | Update installed tools (once a day, never blocking), then search your memory skill for what past sessions established | main |
 | **1. Interview** | Dependent decisions one at a time, independent ones batched; each with a recommended answer | main |
 | **2. Toolset** | Inventory what you own first, search the web only for genuine gaps, and elect when 2+ compete | main + Sonnet subagent |
 | **3. Roster** | Show one plan — installed vs. worth-installing — then **stop and wait** | main |

@@ -101,6 +101,19 @@
         "Nothing is installed before the user gives an explicit yes",
         "The roster separates already-installed picks from ones that would need installing"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "build me a static site generator for my markdown notes",
+      "expected_output": "Loubrain refreshes installed tools before electing from them, uses the dedicated skill-discovery skill to search for genuine gaps, and still gates every new install behind the green light.",
+      "files": [],
+      "assertions": [
+        "Installed tools are refreshed before any capability is elected from them",
+        "The update step is reported in one line, not as raw package output",
+        "A failed or unavailable update does not stop the kickoff",
+        "Outward search leads with the dedicated skill-discovery skill rather than ad-hoc web search",
+        "Updating already-installed tools happens automatically, but installing anything new still waits for an explicit yes"
+      ]
     }
   ]
 }

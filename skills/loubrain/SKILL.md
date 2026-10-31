@@ -1,6 +1,6 @@
 ---
 name: loubrain
-description: Run this FIRST, before ANY substantial build or change work — before writing code or creating files. Triggers on building, creating, starting, making, or scaffolding a project, app, tool, website, script, or bot, AND on improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending existing work, plus adding any non-trivial feature or making any big change. Triggers on these intents in ANY language (crear, créer, erstellen, criar, создать, 创建, 作成, बनाना, إنشاء, oluşturmak, membuat…), not only English. No keyword or slash command is needed — intent alone triggers it. Loubrain runs the whole front end of the work. It recalls past sessions from memory, interviews the user to pin the real goal, inventories the skills and agents they already own, researches the web for anything missing, elects the single best pick per capability, then shows one roster and waits for the user's green light before installing anything or building.
+description: Run this FIRST, before ANY substantial build or change work — before writing code or creating files. Triggers on building, creating, starting, making, or scaffolding a project, app, tool, website, script, or bot, AND on improving, refactoring, rewriting, redesigning, restructuring, migrating, modernizing, or extending existing work, plus adding any non-trivial feature or making any big change. Triggers on these intents in ANY language (crear, créer, erstellen, criar, создать, 创建, 作成, बनाना, إنشاء, oluşturmak, membuat…), not only English. No keyword or slash command is needed — intent alone triggers it. Loubrain runs the whole front end of the work. It updates installed tools, recalls past sessions, interviews the user to pin the real goal, inventories the skills and agents they already own, researches the web for anything missing, elects the single best pick per capability, then shows one roster and waits for the user's green light before installing anything or building.
 ---
 
 # Loubrain
@@ -41,6 +41,20 @@ Search it for this project or a related past session, and carry forward the goal
 Then keep using it for the rest of the run: persist the goal and roster once approved, and each significant decision as it happens, so a compaction or a new session does not lose the plan.
 
 If the user has no memory skill, note it as a gap and fall back to a file in the project (`NOTES.md`, `PLAN.md`) that a later session can pick up.
+
+### Keep the toolset current
+
+Stale tools are a silent tax: an out-of-date skill holds last quarter's API, its old advice, and bugs already fixed upstream. So refresh what's installed before electing anything from it.
+
+Run `npx skills update` once at the start of the run. Then record that it ran, and **skip it entirely if it has already run in the last 24 hours** — a network round trip in front of every request is exactly the kind of overhead Loubrain is supposed to remove. A marker file in the config directory (`<config>/.loubrain-updated`) is enough: check its modification time first, touch it after.
+
+Three things to know before you rely on it:
+
+- **There is no dry run.** `npx skills check` sounds read-only but applies the updates too, so there is no way to preview and then ask. This is why the step is scoped to *updating what the user already installed* — tools they have already chosen and trusted.
+- **Updating is not installing.** This step never adds anything new. A skill the user does not have still goes through Phase 3 and still needs an explicit yes.
+- **It must never block the build.** Individual updates fail (an upstream repo moves, a network blip), `npx` may be missing, the machine may be offline. Note what failed in one line and carry on — a stale tool is a far smaller problem than a kickoff that cannot start.
+
+Report the result in one line, not a wall of package output: how many updated, and anything that failed.
 
 ## Phase 1 — Interview until the goal is real
 
@@ -86,9 +100,11 @@ Check invocability too: a skill marked `disable-model-invocation: true` cannot b
 
 ### 2b. Only then, search outward for what is missing
 
-For any capability with no installed candidate, search the ecosystem — using the user's best installed discovery skill (`skill-scout` searches local, marketplace, GitHub and web; `find-skills` discovers installable skills), or `SearchPlugins` / `SuggestPluginInstall`, or direct research across GitHub, Reddit, and dev blogs.
+**`find-skills` is the default way to search.** For any capability with no installed candidate, reach for it first — it is purpose-built for exactly this question, and it checks the skills.sh leaderboard before searching, so install counts and provenance come back with the results instead of having to be chased down separately. Its CLI (`npx skills find <query>`) searches the open skill ecosystem directly.
 
-Judge external candidates harder than installed ones — they are unvetted code from strangers. Prefer maintained, popular, clearly-scoped skills, and say where each came from.
+Fall back only when it genuinely cannot answer: `skill-scout` for local and marketplace sources, `SearchPlugins` / `SuggestPluginInstall` for plugins, or direct research across GitHub, Reddit, and dev blogs for anything outside the skill ecosystem entirely. If `find-skills` is not installed, use whatever discovery skill is, and say which.
+
+Judge external candidates harder than installed ones — they are unvetted code from strangers. Prefer maintained, popular, clearly-scoped skills; treat a high install count as evidence and anything with very few installs as a risk worth naming. Always say where each came from.
 
 ### 2c. Elect when several compete
 

@@ -25,6 +25,12 @@ Before asking anything, Loubrain picks your session-memory capability with a qui
 
 Anything a previous session already settled (the goal, the decisions, the roster) is carried forward rather than re-asked. It keeps writing back to that memory for the rest of the run, so a compaction mid-build doesn't lose the plan. With no memory skill installed, it falls back to a project file (`NOTES.md`, `PLAN.md`) a later session can pick up.
 
+Loubrain also refreshes your installed skills here, by running the skill manager's update once and then skipping it for 24 hours. The reason is simple: an out-of-date skill carries last quarter's API, its old advice, and bugs already fixed upstream, and electing it is worse than electing nothing.
+
+Two boundaries matter. **Updating is not installing** — this only refreshes tools you already chose; anything new still waits for the green light in Phase 3. And **it never blocks the build**: individual updates fail, the updater may be missing, the machine may be offline, and a stale tool is a far smaller problem than a kickoff that cannot start. You get one line about what updated, not a wall of package output.
+
+A note for anyone wiring this up themselves: `npx skills check` reads as a dry run but actually applies the updates, so there is no preview-then-confirm option. That is precisely why the step is scoped to things already installed and trusted.
+
 ### 1. Interview
 
 The wrong goal elects the wrong toolset and builds the wrong thing, so this phase decides everything downstream. Loubrain runs a real interview rather than a form dump:

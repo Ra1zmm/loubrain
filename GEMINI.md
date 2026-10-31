@@ -21,6 +21,12 @@ This composes other capabilities internally, but to the user it is **one process
 
 Load what is already known; re-deriving context you already had is the most expensive habit there is. Use the user's session-memory capability — a memory plugin, knowledge base, or notes skill — to recover the goal, decisions, and plan from any related past session, and keep writing to it as you go. With none available, note the gap and fall back to a project file (`NOTES.md`, `PLAN.md`).
 
+## 0b. Keep the toolset current
+
+Stale tools carry last quarter's API and bugs already fixed upstream, so refresh what is installed before electing anything from it, using whatever update mechanism the host provides.
+
+Run it once at the start and **skip it if it already ran in the last 24 hours** — a network round trip before every request is the overhead this process exists to remove. Three constraints: a true preview may not exist (some update commands apply changes regardless of their name), updating is never installing (anything new still needs an explicit yes in the plan), and it must never block the work (note failures in one line and carry on).
+
 ## 1. Interview until the goal is real
 
 The wrong goal elects the wrong toolset and builds the wrong thing. Run a relentless interview:
@@ -39,7 +45,7 @@ Two capabilities are on every plan regardless of project, because both fail sile
 
 **2a. What the user already has comes first.** Installed tools cost nothing, need no approval, and are already trusted. Find candidates cheaply — the in-context capability list, then a targeted keyword search — never bulk-read the library. Match on *what a tool does*, read from its description, never on its name. Confirm you can actually invoke it; never plan around something you can't run.
 
-**2b. Only then search outward.** For capabilities with no local candidate, research GitHub, Reddit, and dev blogs, or use a discovery tool if the user has one. Judge external candidates harder — unvetted code from strangers. Prefer maintained, popular, clearly-scoped options, and say where each came from.
+**2b. Only then search outward.** For capabilities with no local candidate, reach first for a purpose-built skill-discovery capability if the user has one — it is built for exactly this question and returns provenance and install counts with the results. Fall back to plugin search or direct research across GitHub, Reddit, and dev blogs only when that cannot answer, and say which route you used. Judge external candidates harder — unvetted code from strangers. Prefer maintained, popular, clearly-scoped options, treat a very low install count as a risk worth naming, and say where each came from.
 
 **2c. Elect when several compete.** Per capability: 0 candidates → a gap; 1 → use it, no election; 2+ → compare what each does, check external evidence on which is better regarded for this kind of work, and score on goal match, specificity, coverage, and external verdict. One winner per capability, never two. Delegate the comparison to a cheaper model if you can — it's mechanical. Without web access, elect on internal criteria and say so.
 
